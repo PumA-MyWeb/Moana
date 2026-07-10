@@ -1,68 +1,218 @@
 import streamlit as st
 import random
-st.set_page_config(page_title="ระบบจัดที่นั่งสุดพิเศษ", page_icon="🎬", layout="centered")
-st.title("🎬 ระบบสุ่มจัดที่นั่งโรงภาพยนตร์")
-st.write("กดปุ่มด้านล่างเพื่อทำการสุ่มจัดที่นั่งให้กับทุกคนในระบบ")
-if st.button("🎰 เริ่มสุ่มที่นั่งใหม่", type="primary"):
-    a = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
-    b = random.randint(1, 4)
-    suite1 = []
-    suite2 = []
-    prime = [None, None, None]
-    fixed_pair = ["Cat", "Primo"]
-    others = [p for p in a if p not in fixed_pair]
-    random.shuffle(others) 
-    if b == 1:
-        suite1 = fixed_pair.copy()
-        random.shuffle(suite1)
-        suite2 = [others.pop(), others.pop()]
-        prime = others.copy()
-    elif b == 2:
-        suite2 = fixed_pair.copy()
-        random.shuffle(suite2)
-        suite1 = [others.pop(), others.pop()]
-        prime = others.copy()
-    elif b == 3:
-        suite1 = [others.pop(), others.pop()]
-        suite2 = [others.pop(), others.pop()]
-        p_pair = fixed_pair.copy()
-        random.shuffle(p_pair)
-        prime = [p_pair[0], p_pair[1], others.pop()]
-    elif b == 4:
-        suite1 = [others.pop(), others.pop()]
-        suite2 = [others.pop(), others.pop()]
-        p_pair = fixed_pair.copy()
-        random.shuffle(p_pair)
-        prime = [others.pop(), p_pair[0], p_pair[1]]
-    st.success("🎉 ทำการสุ่มและจัดที่นั่งเรียบร้อยแล้ว!")
-    st.balloons()
-    st.subheader("🛋️ โซน Suite Seats (เบาะคู่)")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.info("**Suite Seat 1** (AA5, AA6)")
-        st.markdown(f"👤 **คนที่ 1:** {suite1[0]}")
-        st.markdown(f"👤 **คนที่ 2:** {suite1[1]}")
-    with col2:
-        st.info("**Suite Seat 2** (AA7, AA8)")
-        st.markdown(f"👤 **คนที่ 1:** {suite2[0]}")
-        st.markdown(f"👤 **คนที่ 2:** {suite2[1]}")
-    st.write("---")
-    st.subheader("💺 โซน Prime Seats (เบาะเดี่ยว)")
-    p_col1, p_col2, p_col3 = st.columns(3)
-    with p_col1:
-        st.metric(label="Prime 1 (A7)", value=prime[0])
-    with p_col2:
-        st.metric(label="Prime 2 (A8)", value=prime[1])
-    with p_col3:
-        st.metric(label="Prime 3 (A9)", value=prime[2])
-    st.caption(f"ℹ️ ระบบคำนวณผ่านโครงสร้างเงื่อนไขรูปแบบที่ {b}")
-else:
-    st.info("💡 กรุณากดปุ่มด้านบนเพื่อเริ่มสุ่มตำแหน่งที่นั่ง")
-    st.write("**📋 ข้อมูลหมายเลขที่นั่งในระบบ:**")
+
+if "step" not in st.session_state:
+    st.session_state.step = 0
+if "names_ordered" not in st.session_state:
+    st.session_state.names_ordered = []
+
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+    
+    .stApp {
+        background-color: #2163ad !important;
+    }
+    html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
+        font-family: 'Kanit', sans-serif !important;
+        color: #ffffff !important;
+        text-align: center !important;
+    }
+    .stButton {
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+if st.session_state.step == 0:
     st.markdown("""
-    *   **Suite Seat 1:** ที่นั่งหมายเลข AA5 และ AA6
-    *   **Suite Seat 2:** ที่นั่งหมายเลข AA7 และ AA8
-    *   **Prime Seat 1:** ที่นั่งหมายเลข A7
-    *   **Prime Seat 2:** ที่นั่งหมายเลข A8
-    *   **Prime Seat 3:** ที่นั่งหมายเลข A9
-    """)
+        <style>
+        div.stButton > button {
+            background-color: #2f5b8d !important;
+            color: white !important;
+            border: none !important;
+            font-family: 'Kanit', sans-serif !important;
+            padding: 12px 30px !important;
+            border-radius: 4px !important;
+            font-size: 16px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <style>
+        div.stButton > button {
+            background-color: transparent !important;
+            color: white !important;
+            border: none !important;
+            text-decoration: underline !important;
+            font-size: 14px !important;
+            font-family: 'Kanit', sans-serif !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-top: 15px !important;
+        }
+        div.stButton > button:hover {
+            background-color: transparent !important;
+            color: #d0d0d0 !important;
+            text-decoration: underline !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+if st.session_state.step > 0 and st.session_state.step < 11:
+    st.markdown("""
+        <style>
+        .curtain-panel {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 50vw;
+            background: #15457a;
+            z-index: -1;
+            animation: curtainClose 1s forwards;
+        }
+        .left-p { left: 0; transform-origin: left; }
+        .right-p { right: 0; transform-origin: right; }
+        @keyframes curtainClose {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        </style>
+        <div class="curtain-panel left-p"></div>
+        <div class="curtain-panel right-p"></div>
+    """, unsafe_allow_html=True)
+elif st.session_state.step == 11:
+    st.markdown("""
+        <style>
+        .curtain-panel {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 50vw;
+            background: #15457a;
+            z-index: -1;
+            animation: curtainOpen 1.2s forwards;
+        }
+        .left-p { left: 0; transform-origin: left; }
+        .right-p { right: 0; transform-origin: right; }
+        @keyframes curtainOpen {
+            0% { transform: scaleX(1); }
+            100% { transform: scaleX(0); }
+        }
+        </style>
+        <div class="curtain-panel left-p"></div>
+        <div class="curtain-panel right-p"></div>
+    """, unsafe_allow_html=True)
+
+if st.session_state.step == 0:
+    st.markdown("<h1>Moana Opportunity 101</h1>", unsafe_allow_html=True)
+    st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
+    
+    if st.button("Random"):
+        a = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
+        b = random.randint(1, 4)
+        fixed_pair = ["Cat", "Primo"]
+        others = [p for p in a if p not in fixed_pair]
+        random.shuffle(others)
+        
+        if b == 1:
+            suite1 = fixed_pair.copy()
+            random.shuffle(suite1)
+            suite2 = [others.pop(), others.pop()]
+            prime = others.copy()
+        elif b == 2:
+            suite2 = fixed_pair.copy()
+            random.shuffle(suite2)
+            suite1 = [others.pop(), others.pop()]
+            prime = others.copy()
+        elif b == 3:
+            suite1 = [others.pop(), others.pop()]
+            suite2 = [others.pop(), others.pop()]
+            p_pair = fixed_pair.copy()
+            random.shuffle(p_pair)
+            prime = [p_pair[0], p_pair[1], others.pop()]
+        elif b == 4:
+            suite1 = [others.pop(), others.pop()]
+            suite2 = [others.pop(), others.pop()]
+            p_pair = fixed_pair.copy()
+            random.shuffle(p_pair)
+            prime = [others.pop(), p_pair[0], p_pair[1]]
+            
+        st.session_state.names_ordered = [suite1[0], suite1[1], suite2[0], suite2[1], prime[0], prime[1], prime[2]]
+        st.session_state.step = 1
+        st.rerun()
+
+elif st.session_state.step == 1:
+    st.markdown("<h2>The people who will sit on Suite Seat 1 are</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n1"):
+        st.session_state.step = 2
+        st.rerun()
+
+elif st.session_state.step == 2:
+    st.markdown(f"<h2>{st.session_state.names_ordered[0]} and</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n2"):
+        st.session_state.step = 3
+        st.rerun()
+
+elif st.session_state.step == 3:
+    st.markdown(f"<h2>{st.session_state.names_ordered[1]}</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n3"):
+        st.session_state.step = 4
+        st.rerun()
+
+elif st.session_state.step == 4:
+    st.markdown("<h2>The people who will sit on Suite Seat 2 are</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n4"):
+        st.session_state.step = 5
+        st.rerun()
+
+elif st.session_state.step == 5:
+    st.markdown(f"<h2>{st.session_state.names_ordered[2]} and</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n5"):
+        st.session_state.step = 6
+        st.rerun()
+
+elif st.session_state.step == 6:
+    st.markdown(f"<h2>{st.session_state.names_ordered[3]}</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n6"):
+        st.session_state.step = 7
+        st.rerun()
+
+elif st.session_state.step == 7:
+    st.markdown("<h2>Next, these are the people who will sit on Prime Seat</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n7"):
+        st.session_state.step = 8
+        st.rerun()
+
+elif st.session_state.step == 8:
+    st.markdown(f"<h2>1. {st.session_state.names_ordered[4]}</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n8"):
+        st.session_state.step = 9
+        st.rerun()
+
+elif st.session_state.step == 9:
+    st.markdown(f"<h2>2. {st.session_state.names_ordered[5]}</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n9"):
+        st.session_state.step = 10
+        st.rerun()
+
+elif st.session_state.step == 10:
+    st.markdown(f"<h2>3. {st.session_state.names_ordered[6]}</h2>", unsafe_allow_html=True)
+    if st.button("Next", key="n10"):
+        st.session_state.step = 11
+        st.rerun()
+
+elif st.session_state.step == 11:
+    st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
+    st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>Suite Seat 2 (AA7 and AA8) : {st.session_state.names_ordered[2]} and {st.session_state.names_ordered[3]}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>Prime Seat 1 (A7) : {st.session_state.names_ordered[4]}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>Prime Seat 2 (A8) : {st.session_state.names_ordered[5]}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>Prime Seat 3 (A9) : {st.session_state.names_ordered[6]}</p>", unsafe_allow_html=True)
+    
+    if st.button("Reset Selection"):
+        st.session_state.step = 0
+        st.session_state.names_ordered = []
+        st.rerun()
