@@ -18,9 +18,13 @@ st.markdown("""
         color: #ffffff !important;
         text-align: center !important;
     }
-    .stButton {
-        display: flex;
-        justify-content: center;
+    /* บังคับให้กล่องปุ่มจัดวางอยู่ตรงกลางหน้าจออย่างสมบูรณ์ */
+    div.stButton {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 auto !important;
+        width: 100% !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -36,6 +40,7 @@ if st.session_state.step == 0:
             padding: 12px 30px !important;
             border-radius: 4px !important;
             font-size: 16px !important;
+            margin: 0 auto !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -51,7 +56,7 @@ else:
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
             padding: 0 !important;
-            margin-top: 15px !important;
+            margin: 15px auto 0 auto !important;
         }
         div.stButton > button:hover {
             background-color: transparent !important;
