@@ -37,7 +37,7 @@ st.markdown("""
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
-        gap: 10px !important;
+        gap: 8px !important;
     }
     
     div[data-testid="stVerticalBlock"] > div {
@@ -58,6 +58,11 @@ st.markdown("""
         margin: 0 auto !important;
     }
 
+    /* ปรับลดขนาดตัวอักษรลงมานิดเดียวตามบรีฟ */
+    h1 { font-size: 2.2rem !important; }
+    h2 { font-size: 1.6rem !important; }
+    p { font-size: 0.95rem !important; }
+
     div[data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
@@ -71,7 +76,7 @@ st.markdown("""
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        margin: 15px auto !important;
+        margin: 12px auto !important;
     }
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
@@ -88,9 +93,9 @@ if st.session_state.step == 0 or st.session_state.step == 11:
             color: rgb(255, 255, 255) !important;
             border: none !important;
             font-family: 'Kanit', sans-serif !important;
-            padding: 12px 40px !important;
+            padding: 11px 36px !important;
             border-radius: 4px !important;
-            font-size: 18px !important;
+            font-size: 16px !important;
             width: auto !important;
             max-width: max-content !important;
             margin: 0 auto !important;
@@ -106,14 +111,14 @@ else:
             color: rgb(255, 255, 255) !important;
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
             text-decoration: none !important;
-            font-size: 14px !important;
+            font-size: 13px !important;
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
-            padding: 6px 20px !important;
+            padding: 5px 18px !important;
             border-radius: 4px !important;
             width: auto !important;
             max-width: max-content !important;
-            margin: 15px auto 0 auto !important;
+            margin: 12px auto 0 auto !important;
             transition: all 0.2s ease !important;
         }
         div[data-testid="stButton"] > button:hover {
@@ -173,7 +178,7 @@ elif st.session_state.step == 11:
 
 if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity 101</h1>", unsafe_allow_html=True)
-    st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=280)
+    st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210) # 280 * 0.75
     st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
@@ -273,7 +278,7 @@ elif st.session_state.step == 10:
 elif st.session_state.step == 11:
     st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
     try:
-        st.image("cinema_seats.png", width=420)
+        st.image("cinema_seats.png", width=315) # 420 * 0.75
     except:
         pass
     st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
