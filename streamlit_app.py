@@ -62,7 +62,8 @@ st.markdown("""
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        width: 100% !important;
+        width: auto !important;
+        max-width: max-content !important;
         margin: 10px auto !important;
     }
     
@@ -90,6 +91,8 @@ if st.session_state.step == 0 or st.session_state.step == 11:
             padding: 12px 40px !important;
             border-radius: 4px !important;
             font-size: 18px !important;
+            width: auto !important;
+            max-width: max-content !important;
             margin: 0 auto !important;
             box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.4) !important;
         }
@@ -108,6 +111,8 @@ else:
             box-shadow: none !important;
             padding: 6px 20px !important;
             border-radius: 4px !important;
+            width: auto !important;
+            max-width: max-content !important;
             margin: 15px auto 0 auto !important;
             transition: all 0.2s ease !important;
         }
