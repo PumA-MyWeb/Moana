@@ -10,14 +10,39 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
     
-    .stApp {
-        background-color: #2163ad !important;
+    html, body, .stApp {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        overflow: hidden !important;
+        background-color: rgb(33, 99, 173) !important;
     }
-    html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
-        font-family: 'Kanit', sans-serif !important;
-        color: #ffffff !important;
-        text-align: center !important;
-        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
+    
+    div[data-testid="stMainBlockContainer"] {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-width: 100vw !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+
+    div[data-testid="stVerticalBlock"] {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 10px !important;
     }
     
     div[data-testid="stVerticalBlock"] > div {
@@ -27,6 +52,15 @@ st.markdown("""
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
+        width: 100% !important;
+    }
+
+    html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
+        font-family: 'Kanit', sans-serif !important;
+        color: rgb(255, 255, 255) !important;
+        text-align: center !important;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
+        margin: 0 auto !important;
     }
 
     div[data-testid="stButton"] {
@@ -34,11 +68,7 @@ st.markdown("""
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
-        margin: 20px auto !important;
-    }
-    div[data-testid="stButton"] > button {
-        margin: 0 auto !important;
-        display: block !important;
+        margin: 10px auto !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -47,8 +77,8 @@ if st.session_state.step == 0:
     st.markdown("""
         <style>
         div[data-testid="stButton"] > button {
-            background-color: #2f5b8d !important;
-            color: white !important;
+            background-color: rgb(47, 91, 141) !important;
+            color: rgb(255, 255, 255) !important;
             border: none !important;
             font-family: 'Kanit', sans-serif !important;
             padding: 12px 40px !important;
@@ -64,18 +94,18 @@ else:
         <style>
         div[data-testid="stButton"] > button {
             background-color: transparent !important;
-            color: white !important;
+            color: rgb(255, 255, 255) !important;
             border: none !important;
             text-decoration: underline !important;
             font-size: 14px !important;
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
             padding: 0 !important;
-            margin: 15px auto 0 auto !important;
+            margin: 10px auto 0 auto !important;
         }
         div[data-testid="stButton"] > button:hover {
             background-color: transparent !important;
-            color: #d0d0d0 !important;
+            color: rgb(208, 208, 208) !important;
             text-decoration: underline !important;
         }
         </style>
@@ -89,7 +119,7 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: repeating-linear-gradient(90deg, #500000, #7a0000 15px, #990000 30px, #7a0000 45px, #500000 60px);
+            background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
             z-index: 10 !important;
             animation: curtainClose 1s forwards;
             box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
@@ -112,7 +142,7 @@ elif st.session_state.step == 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: repeating-linear-gradient(90deg, #500000, #7a0000 15px, #990000 30px, #7a0000 45px, #500000 60px);
+            background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
             z-index: 10 !important;
             animation: curtainOpen 1.2s forwards;
             box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
