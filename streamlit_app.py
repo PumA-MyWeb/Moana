@@ -178,7 +178,7 @@ elif st.session_state.step == 11:
 if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
-    st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
+    st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
         a = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
