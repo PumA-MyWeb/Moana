@@ -17,11 +17,16 @@ st.markdown("""
         font-family: 'Kanit', sans-serif !important;
         color: #ffffff !important;
         text-align: center !important;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
     }
     
     div[data-testid="stVerticalBlock"] > div {
         position: relative !important;
         z-index: 20 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     div[data-testid="stButton"] {
@@ -30,10 +35,10 @@ st.markdown("""
         align-items: center !important;
         width: 100% !important;
         margin: 20px auto !important;
-        text-align: center !important;
     }
     div[data-testid="stButton"] > button {
         margin: 0 auto !important;
+        display: block !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -50,6 +55,7 @@ if st.session_state.step == 0:
             border-radius: 4px !important;
             font-size: 18px !important;
             margin: 0 auto !important;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.4) !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -83,10 +89,10 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #8b0000;
+            background: repeating-linear-gradient(90deg, #500000, #7a0000 15px, #990000 30px, #7a0000 45px, #500000 60px);
             z-index: 10 !important;
             animation: curtainClose 1s forwards;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0; transform-origin: left; }
         .right-p { right: 0; transform-origin: right; }
@@ -106,10 +112,10 @@ elif st.session_state.step == 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #8b0000;
+            background: repeating-linear-gradient(90deg, #500000, #7a0000 15px, #990000 30px, #7a0000 45px, #500000 60px);
             z-index: 10 !important;
             animation: curtainOpen 1.2s forwards;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0; transform-origin: left; }
         .right-p { right: 0; transform-origin: right; }
