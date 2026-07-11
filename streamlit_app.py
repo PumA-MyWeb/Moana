@@ -181,36 +181,18 @@ if st.session_state.step == 0:
     st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
-        a = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
-        b = random.randint(1, 4)
-        fixed_pair = ["Cat", "Primo"]
-        others = [p for p in a if p not in fixed_pair]
-        random.shuffle(others)
+        # รายชื่อทั้งหมด 7 คน
+        all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
         
-        if b == 1:
-            suite1 = fixed_pair.copy()
-            random.shuffle(suite1)
-            suite2 = [others.pop(), others.pop()]
-            prime = others.copy()
-        elif b == 2:
-            suite2 = fixed_pair.copy()
-            random.shuffle(suite2)
-            suite1 = [others.pop(), others.pop()]
-            prime = others.copy()
-        elif b == 3:
-            suite1 = [others.pop(), others.pop()]
-            suite2 = [others.pop(), others.pop()]
-            p_pair = fixed_pair.copy()
-            random.shuffle(p_pair)
-            prime = [p_pair[0], p_pair[1], others.pop()]
-        elif b == 4:
-            suite1 = [others.pop(), others.pop()]
-            suite2 = [others.pop(), others.pop()]
-            p_pair = fixed_pair.copy()
-            random.shuffle(p_pair)
-            prime = [others.pop(), p_pair[0], p_pair[1]]
+        # สุ่มลำดับรายชื่อทั้งหมด 100%
+        random.shuffle(all_names)
+        
+        # แบ่งกลุ่มตามลำดับที่สุ่มได้: 2, 2, 3
+        suite1 = [all_names[0], all_names[1]]
+        suite2 = [all_names[2], all_names[3]]
+        prime = [all_names[4], all_names[5], all_names[6]]
             
-        st.session_state.names_ordered = [suite1[0], suite1[1], suite2[0], suite2[1], prime[0], prime[1], prime[2]]
+        st.session_state.names_ordered = suite1 + suite2 + prime
         st.session_state.step = 1
         st.rerun()
 
