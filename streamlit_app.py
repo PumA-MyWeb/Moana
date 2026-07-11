@@ -136,10 +136,10 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             top: 0;
             height: 100vh;
             width: 50% !important;
-            background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
+            background: repeating-linear-gradient(90deg, rgb(105, 12, 12), rgb(138, 18, 18) 15px, rgb(166, 30, 30) 30px, rgb(138, 18, 18) 45px, rgb(105, 12, 12) 60px);
             z-index: 99999 !important;
             animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
         }
         .left-p { left: 0 !important; transform-origin: left; }
         .right-p { right: 0 !important; transform-origin: right; }
@@ -159,10 +159,10 @@ elif st.session_state.step == 11:
             top: 0;
             height: 100vh;
             width: 50% !important;
-            background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
+            background: repeating-linear-gradient(90deg, rgb(105, 12, 12), rgb(138, 18, 18) 15px, rgb(166, 30, 30) 30px, rgb(138, 18, 18) 45px, rgb(105, 12, 12) 60px);
             z-index: 99999 !important;
             animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
         }
         .left-p { left: 0 !important; transform-origin: left; }
         .right-p { right: 0 !important; transform-origin: right; }
@@ -176,7 +176,7 @@ elif st.session_state.step == 11:
     """, unsafe_allow_html=True)
 
 if st.session_state.step == 0:
-    st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>Moana Opportunity 101</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
     
