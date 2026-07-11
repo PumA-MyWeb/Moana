@@ -84,40 +84,39 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
     }
 
-    /* สไตล์ปุ่มลับแบบ "แถบข้างรูปโปสเตอร์ฝั่งขวา" ใสเคลียร์ 100% */
-    .secret-marker { display: none; }
+    /* เสกปุ่มลับให้กลายเป็นตัวอักษรธรรมดา 100% ไร้ร่องรอยปุ่มเดิม */
+    .luck-marker { display: none; }
     
-    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] {
-        position: absolute !important;
-        width: 0 !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
+    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] {
+        margin-top: -6px !important; /* ดึงให้ชิดข้อความบนเหมือนเป็นย่อหน้าเดียวกัน */
     }
 
-    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
-        position: fixed !important;
-        left: calc(50% + 110px) !important; /* เริ่มต้นจากขอบขวาของรูปโปสเตอร์พอดี */
-        right: 0px !important;              /* ยาวไปจนสุดขอบจอขวา */
-        top: 30vh !important;               /* คลุมพื้นที่แนวตั้งระดับสายตาตรงรูป */
-        height: 35vh !important;            /* ความสูงของพื้นที่กดเป็นแถบใหญ่ */
-        opacity: 0 !important;              /* ล่องหนสมบูรณ์แบบ 100% */
-        z-index: 999999 !important;
+    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
         background: transparent !important;
         border: none !important;
+        color: rgb(255, 255, 255) !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
         box-shadow: none !important;
         padding: 0 !important;
+        margin: 0 auto !important;
         cursor: default !important;
+        min-height: auto !important;
+        line-height: inherit !important;
+        -webkit-tap-highlight-color: transparent !important; /* ป้องกันแสงวาบตอนกดบน iOS/Android */
     }
     
-    /* ป้องกันไม่ให้มีเอฟเฟกต์แสงหรือขอบขึ้นตอนกด */
-    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
-    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
-    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
+    /* บล็อกทุกอนิเมชั่น ไม่ให้มีเอฟเฟกต์ใดๆ ขยับตอนนิ้วไปโดน */
+    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
+    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
+    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
         background: transparent !important;
         border: none !important;
+        color: rgb(255, 255, 255) !important;
         box-shadow: none !important;
-        opacity: 0 !important;
+        -webkit-tap-highlight-color: transparent !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -217,12 +216,12 @@ if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     
-    st.markdown('<div class="secret-marker"></div>', unsafe_allow_html=True)
-    if st.button("", key="invisible_poster_side_trigger"):
+    st.markdown("<p style='margin-bottom: 0px !important;'>Click below to start the random selection.</p>", unsafe_allow_html=True)
+    
+    st.markdown('<div class="luck-marker"></div>', unsafe_allow_html=True)
+    if st.button("Good luck!", key="invisible_good_luck_trigger"):
         st.session_state.secret_lock = not st.session_state.secret_lock
 
-    st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
-    
     if st.button("Random"):
         all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
         
