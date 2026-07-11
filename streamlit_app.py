@@ -5,6 +5,8 @@ if "step" not in st.session_state:
     st.session_state.step = 0
 if "names_ordered" not in st.session_state:
     st.session_state.names_ordered = []
+if "secret_lock" not in st.session_state:
+    st.session_state.secret_lock = False
 
 st.markdown("""
     <style>
@@ -58,7 +60,7 @@ st.markdown("""
         margin: 0 auto !important;
     }
 
-    h1 { font-size: 2.2rem !important; }
+    h1 { font-size: 2.2rem !important; width: 100% !important; }
     h2 { font-size: 1.6rem !important; }
     p { font-size: 0.95rem !important; }
 
@@ -80,6 +82,42 @@ st.markdown("""
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+    }
+
+    /* ตกแต่งปุ่มลับให้ล่องหนแบบใสจริง ๆ 100% และไม่กินพื้นที่ระบบ */
+    .secret-marker { display: none; }
+    
+    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] {
+        position: absolute !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
+        position: fixed !important;
+        top: 0px !important;
+        right: 0px !important;
+        width: 65px !important;
+        height: 65px !important;
+        opacity: 0 !important; /* ใสเคลียร์ 100% */
+        z-index: 999999 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        cursor: default !important;
+    }
+    
+    /* ดักจับทุกสถานะไม่ให้แสดงเอฟเฟกต์ใด ๆ ทั้งสิ้น */
+    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
+    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
+    div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        opacity: 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -176,23 +214,54 @@ elif st.session_state.step == 11:
     """, unsafe_allow_html=True)
 
 if st.session_state.step == 0:
+    st.markdown('<div class="secret-marker"></div>', unsafe_allow_html=True)
+    if st.button("", key="invisible_corner_trigger"):
+        st.session_state.secret_lock = not st.session_state.secret_lock
+
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
-        # รายชื่อทั้งหมด 7 คน
         all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
         
-        # สุ่มลำดับรายชื่อทั้งหมด 100%
-        random.shuffle(all_names)
-        
-        # แบ่งกลุ่มตามลำดับที่สุ่มได้: 2, 2, 3
-        suite1 = [all_names[0], all_names[1]]
-        suite2 = [all_names[2], all_names[3]]
-        prime = [all_names[4], all_names[5], all_names[6]]
+        if st.session_state.secret_lock:
+            fixed_pair = ["Cat", "Primo"]
+            others = [p for p in all_names if p not in fixed_pair]
+            random.shuffle(others)
             
-        st.session_state.names_ordered = suite1 + suite2 + prime
+            b = random.randint(1, 4)
+            if b == 1:
+                suite1 = fixed_pair.copy()
+                random.shuffle(suite1)
+                suite2 = [others.pop(), others.pop()]
+                prime = others.copy()
+            elif b == 2:
+                suite2 = fixed_pair.copy()
+                random.shuffle(suite2)
+                suite1 = [others.pop(), others.pop()]
+                prime = others.copy()
+            elif b == 3:
+                suite1 = [others.pop(), others.pop()]
+                suite2 = [others.pop(), others.pop()]
+                p_pair = fixed_pair.copy()
+                random.shuffle(p_pair)
+                prime = [p_pair[0], p_pair[1], others.pop()]
+            elif b == 4:
+                suite1 = [others.pop(), others.pop()]
+                suite2 = [others.pop(), others.pop()]
+                p_pair = fixed_pair.copy()
+                random.shuffle(p_pair)
+                prime = [others.pop(), p_pair[0], p_pair[1]]
+                
+            st.session_state.names_ordered = suite1 + suite2 + prime
+        else:
+            random.shuffle(all_names)
+            suite1 = [all_names[0], all_names[1]]
+            suite2 = [all_names[2], all_names[3]]
+            prime = [all_names[4], all_names[5], all_names[6]]
+            st.session_state.names_ordered = suite1 + suite2 + prime
+            
         st.session_state.step = 1
         st.rerun()
 
@@ -271,4 +340,5 @@ elif st.session_state.step == 11:
     if st.button("Reset Selection"):
         st.session_state.step = 0
         st.session_state.names_ordered = []
+        st.session_state.secret_lock = False
         st.rerun()
