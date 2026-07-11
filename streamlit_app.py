@@ -5,8 +5,6 @@ if "step" not in st.session_state:
     st.session_state.step = 0
 if "names_ordered" not in st.session_state:
     st.session_state.names_ordered = []
-if "secret_lock" not in st.session_state:
-    st.session_state.secret_lock = False
 
 st.markdown("""
     <style>
@@ -82,27 +80,6 @@ st.markdown("""
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-    }
-
-    /* สไตล์สำหรับปุ่มลับ: ทำให้โปร่งใส ซ่อนเนียนไปกับพื้นหลัง */
-    .secret-trigger button {
-        background: transparent !important;
-        border: none !important;
-        color: transparent !important;
-        box-shadow: none !important;
-        width: 40px !important;
-        height: 40px !important;
-        position: absolute !important;
-        right: 15px !important;
-        top: 25px !important;
-        z-index: 999999 !important;
-        cursor: default !important;
-    }
-    .secret-trigger button:hover, .secret-trigger button:active, .secret-trigger button:focus {
-        background: transparent !important;
-        border: none !important;
-        color: transparent !important;
-        box-shadow: none !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -199,58 +176,23 @@ elif st.session_state.step == 11:
     """, unsafe_allow_html=True)
 
 if st.session_state.step == 0:
-    col_title, col_secret = st.columns([9, 1])
-    with col_title:
-        st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
-    with col_secret:
-        st.markdown('<div class="secret-trigger">', unsafe_allow_html=True)
-        if st.button(" ", key="hidden_secret_trigger"):
-            st.session_state.secret_lock = not st.session_state.secret_lock
-        st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
+        # รายชื่อทั้งหมด 7 คน
         all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
         
-        if st.session_state.secret_lock:
-            fixed_pair = ["Cat", "Primo"]
-            others = [p for p in all_names if p not in fixed_pair]
-            random.shuffle(others)
+        # สุ่มลำดับรายชื่อทั้งหมด 100%
+        random.shuffle(all_names)
+        
+        # แบ่งกลุ่มตามลำดับที่สุ่มได้: 2, 2, 3
+        suite1 = [all_names[0], all_names[1]]
+        suite2 = [all_names[2], all_names[3]]
+        prime = [all_names[4], all_names[5], all_names[6]]
             
-            b = random.randint(1, 4)
-            if b == 1:
-                suite1 = fixed_pair.copy()
-                random.shuffle(suite1)
-                suite2 = [others.pop(), others.pop()]
-                prime = others.copy()
-            elif b == 2:
-                suite2 = fixed_pair.copy()
-                random.shuffle(suite2)
-                suite1 = [others.pop(), others.pop()]
-                prime = others.copy()
-            elif b == 3:
-                suite1 = [others.pop(), others.pop()]
-                suite2 = [others.pop(), others.pop()]
-                p_pair = fixed_pair.copy()
-                random.shuffle(p_pair)
-                prime = [p_pair[0], p_pair[1], others.pop()]
-            elif b == 4:
-                suite1 = [others.pop(), others.pop()]
-                suite2 = [others.pop(), others.pop()]
-                p_pair = fixed_pair.copy()
-                random.shuffle(p_pair)
-                prime = [others.pop(), p_pair[0], p_pair[1]]
-                
-            st.session_state.names_ordered = suite1 + suite2 + prime
-        else:
-            random.shuffle(all_names)
-            suite1 = [all_names[0], all_names[1]]
-            suite2 = [all_names[2], all_names[3]]
-            prime = [all_names[4], all_names[5], all_names[6]]
-            st.session_state.names_ordered = suite1 + suite2 + prime
-            
+        st.session_state.names_ordered = suite1 + suite2 + prime
         st.session_state.step = 1
         st.rerun()
 
@@ -329,5 +271,4 @@ elif st.session_state.step == 11:
     if st.button("Reset Selection"):
         st.session_state.step = 0
         st.session_state.names_ordered = []
-        st.session_state.secret_lock = False
         st.rerun()
