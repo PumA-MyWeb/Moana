@@ -176,7 +176,7 @@ elif st.session_state.step == 11:
     """, unsafe_allow_html=True)
 
 if st.session_state.step == 0:
-    st.markdown("<h1>Moana Opportunity 101</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
     
@@ -277,7 +277,7 @@ elif st.session_state.step == 10:
 elif st.session_state.step == 11:
     st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
     try:
-        st.image("cinema_seat.png", width=315)
+        st.image("cinema_seats.png", width=315)
     except:
         pass
     st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
