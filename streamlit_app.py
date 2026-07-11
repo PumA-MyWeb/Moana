@@ -84,11 +84,11 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
     }
 
-    /* เสกปุ่มลับให้กลายเป็นตัวอักษรธรรมดา 100% ไร้ร่องรอยปุ่มเดิม */
+    /* ปรับแต่งตำแหน่งปุ่มลับ "Good luck!" ให้ชิดประโยคบนเป็นเนื้อเดียวกัน */
     .luck-marker { display: none; }
     
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] {
-        margin-top: -6px !important; /* ดึงให้ชิดข้อความบนเหมือนเป็นย่อหน้าเดียวกัน */
+        margin-top: -14px !important; /* ลบช่องว่างของระบบทิ้งทั้งหมด เพื่อดึงขึ้นมาต่อท้ายเหมือนกด Enter */
     }
 
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
@@ -104,11 +104,11 @@ st.markdown("""
         margin: 0 auto !important;
         cursor: default !important;
         min-height: auto !important;
-        line-height: inherit !important;
-        -webkit-tap-highlight-color: transparent !important; /* ป้องกันแสงวาบตอนกดบน iOS/Android */
+        line-height: 1.2 !important;
+        -webkit-tap-highlight-color: transparent !important; /* บล็อกแสงแฟลชตอนกดบนมือถือ */
     }
     
-    /* บล็อกทุกอนิเมชั่น ไม่ให้มีเอฟเฟกต์ใดๆ ขยับตอนนิ้วไปโดน */
+    /* บล็อกเอฟเฟกต์การขยับหรือไฮไลต์ทุกรูปแบบเมื่อโดนสัมผัส */
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
@@ -215,9 +215,7 @@ elif st.session_state.step == 11:
 if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
-    
     st.markdown("<p style='margin-bottom: 0px !important;'>Click below to start the random selection.</p>", unsafe_allow_html=True)
-    
     st.markdown('<div class="luck-marker"></div>', unsafe_allow_html=True)
     if st.button("Good luck!", key="invisible_good_luck_trigger"):
         st.session_state.secret_lock = not st.session_state.secret_lock
