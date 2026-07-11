@@ -84,7 +84,7 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
     }
 
-    /* ตกแต่งปุ่มลับให้ล่องหนแบบใสจริง ๆ 100% และไม่กินพื้นที่ระบบ */
+    /* สไตล์ปุ่มลับแบบ "แถบข้างรูปโปสเตอร์ฝั่งขวา" ใสเคลียร์ 100% */
     .secret-marker { display: none; }
     
     div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] {
@@ -97,11 +97,11 @@ st.markdown("""
 
     div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
         position: fixed !important;
-        top: 0px !important;
-        right: 0px !important;
-        width: 65px !important;
-        height: 65px !important;
-        opacity: 0 !important; /* ใสเคลียร์ 100% */
+        left: calc(50% + 110px) !important; /* เริ่มต้นจากขอบขวาของรูปโปสเตอร์พอดี */
+        right: 0px !important;              /* ยาวไปจนสุดขอบจอขวา */
+        top: 30vh !important;               /* คลุมพื้นที่แนวตั้งระดับสายตาตรงรูป */
+        height: 35vh !important;            /* ความสูงของพื้นที่กดเป็นแถบใหญ่ */
+        opacity: 0 !important;              /* ล่องหนสมบูรณ์แบบ 100% */
         z-index: 999999 !important;
         background: transparent !important;
         border: none !important;
@@ -110,7 +110,7 @@ st.markdown("""
         cursor: default !important;
     }
     
-    /* ดักจับทุกสถานะไม่ให้แสดงเอฟเฟกต์ใด ๆ ทั้งสิ้น */
+    /* ป้องกันไม่ให้มีเอฟเฟกต์แสงหรือขอบขึ้นตอนกด */
     div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
     div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
     div[data-testid="stElementContainer"]:has(.secret-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
@@ -214,12 +214,13 @@ elif st.session_state.step == 11:
     """, unsafe_allow_html=True)
 
 if st.session_state.step == 0:
-    st.markdown('<div class="secret-marker"></div>', unsafe_allow_html=True)
-    if st.button("", key="invisible_corner_trigger"):
-        st.session_state.secret_lock = not st.session_state.secret_lock
-
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
+    
+    st.markdown('<div class="secret-marker"></div>', unsafe_allow_html=True)
+    if st.button("", key="invisible_poster_side_trigger"):
+        st.session_state.secret_lock = not st.session_state.secret_lock
+
     st.markdown("<p>Click below to start the random selection.<br>Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
