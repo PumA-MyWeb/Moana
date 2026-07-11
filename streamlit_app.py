@@ -19,19 +19,21 @@ st.markdown("""
         text-align: center !important;
     }
     
-    /* บังคับยกเลเยอร์เนื้อหาให้อยู่เหนือกราฟิกม่าน */
     div[data-testid="stVerticalBlock"] > div {
         position: relative !important;
         z-index: 20 !important;
     }
 
-    /* บังคับจัดตำแหน่งกล่องปุ่มให้อยู่ตรงกลางหน้าจอ */
     div[data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
         margin: 20px auto !important;
+        text-align: center !important;
+    }
+    div[data-testid="stButton"] > button {
+        margin: 0 auto !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -47,7 +49,6 @@ if st.session_state.step == 0:
             padding: 12px 40px !important;
             border-radius: 4px !important;
             font-size: 18px !important;
-            display: block !important;
             margin: 0 auto !important;
         }
         </style>
@@ -64,7 +65,6 @@ else:
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
             padding: 0 !important;
-            display: inline-block !important;
             margin: 15px auto 0 auto !important;
         }
         div[data-testid="stButton"] > button:hover {
@@ -83,9 +83,10 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #11335c;
+            background: #8b0000;
             z-index: 10 !important;
             animation: curtainClose 1s forwards;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
         }
         .left-p { left: 0; transform-origin: left; }
         .right-p { right: 0; transform-origin: right; }
@@ -105,9 +106,10 @@ elif st.session_state.step == 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #11335c;
+            background: #8b0000;
             z-index: 10 !important;
             animation: curtainOpen 1.2s forwards;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.6);
         }
         .left-p { left: 0; transform-origin: left; }
         .right-p { right: 0; transform-origin: right; }
