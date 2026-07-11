@@ -18,13 +18,20 @@ st.markdown("""
         color: #ffffff !important;
         text-align: center !important;
     }
-    /* บังคับให้กล่องปุ่มจัดวางอยู่ตรงกลางหน้าจออย่างสมบูรณ์ */
-    div.stButton {
+    
+    /* บังคับยกเลเยอร์เนื้อหาให้อยู่เหนือกราฟิกม่าน */
+    div[data-testid="stVerticalBlock"] > div {
+        position: relative !important;
+        z-index: 20 !important;
+    }
+
+    /* บังคับจัดตำแหน่งกล่องปุ่มให้อยู่ตรงกลางหน้าจอ */
+    div[data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        margin: 0 auto !important;
         width: 100% !important;
+        margin: 20px auto !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -32,14 +39,15 @@ st.markdown("""
 if st.session_state.step == 0:
     st.markdown("""
         <style>
-        div.stButton > button {
+        div[data-testid="stButton"] > button {
             background-color: #2f5b8d !important;
             color: white !important;
             border: none !important;
             font-family: 'Kanit', sans-serif !important;
-            padding: 12px 30px !important;
+            padding: 12px 40px !important;
             border-radius: 4px !important;
-            font-size: 16px !important;
+            font-size: 18px !important;
+            display: block !important;
             margin: 0 auto !important;
         }
         </style>
@@ -47,7 +55,7 @@ if st.session_state.step == 0:
 else:
     st.markdown("""
         <style>
-        div.stButton > button {
+        div[data-testid="stButton"] > button {
             background-color: transparent !important;
             color: white !important;
             border: none !important;
@@ -56,9 +64,10 @@ else:
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
             padding: 0 !important;
+            display: inline-block !important;
             margin: 15px auto 0 auto !important;
         }
-        div.stButton > button:hover {
+        div[data-testid="stButton"] > button:hover {
             background-color: transparent !important;
             color: #d0d0d0 !important;
             text-decoration: underline !important;
@@ -74,8 +83,8 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #15457a;
-            z-index: -1;
+            background: #11335c;
+            z-index: 10 !important;
             animation: curtainClose 1s forwards;
         }
         .left-p { left: 0; transform-origin: left; }
@@ -96,8 +105,8 @@ elif st.session_state.step == 11:
             top: 0;
             height: 100vh;
             width: 50vw;
-            background: #15457a;
-            z-index: -1;
+            background: #11335c;
+            z-index: 10 !important;
             animation: curtainOpen 1.2s forwards;
         }
         .left-p { left: 0; transform-origin: left; }
