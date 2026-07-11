@@ -15,7 +15,7 @@ st.markdown("""
         padding: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        overflow: hidden !important;
+        overflow-x: hidden !important;
         background-color: rgb(33, 99, 173) !important;
     }
     
@@ -24,16 +24,11 @@ st.markdown("""
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
-        height: 100vh !important;
         min-height: 100vh !important;
         max-width: 100vw !important;
-        padding: 0 !important;
+        padding: 20px !important;
         margin: 0 auto !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
+        box-sizing: border-box !important;
     }
 
     div[data-testid="stVerticalBlock"] {
@@ -70,10 +65,21 @@ st.markdown("""
         width: 100% !important;
         margin: 10px auto !important;
     }
+    
+    div[data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 15px auto !important;
+    }
+    div[data-testid="stImage"] img {
+        border-radius: 8px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-if st.session_state.step == 0:
+if st.session_state.step == 0 or st.session_state.step == 11:
     st.markdown("""
         <style>
         div[data-testid="stButton"] > button {
@@ -93,20 +99,22 @@ else:
     st.markdown("""
         <style>
         div[data-testid="stButton"] > button {
-            background-color: transparent !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
             color: rgb(255, 255, 255) !important;
-            border: none !important;
-            text-decoration: underline !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            text-decoration: none !important;
             font-size: 14px !important;
             font-family: 'Kanit', sans-serif !important;
             box-shadow: none !important;
-            padding: 0 !important;
-            margin: 10px auto 0 auto !important;
+            padding: 6px 20px !important;
+            border-radius: 4px !important;
+            margin: 15px auto 0 auto !important;
+            transition: all 0.2s ease !important;
         }
         div[data-testid="stButton"] > button:hover {
-            background-color: transparent !important;
-            color: rgb(208, 208, 208) !important;
-            text-decoration: underline !important;
+            background-color: rgba(255, 255, 255, 0.25) !important;
+            border-color: rgba(255, 255, 255, 0.7) !important;
+            color: rgb(255, 255, 255) !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -118,10 +126,10 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50vw;
+            width: 50.5vw;
             background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
             z-index: 10 !important;
-            animation: curtainClose 1s forwards;
+            animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0; transform-origin: left; }
@@ -141,10 +149,10 @@ elif st.session_state.step == 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50vw;
+            width: 50.5vw;
             background: repeating-linear-gradient(90deg, rgb(80, 0, 0), rgb(122, 0, 0) 15px, rgb(153, 0, 0) 30px, rgb(122, 0, 0) 45px, rgb(80, 0, 0) 60px);
             z-index: 10 !important;
-            animation: curtainOpen 1.2s forwards;
+            animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0; transform-origin: left; }
@@ -160,6 +168,7 @@ elif st.session_state.step == 11:
 
 if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity 101</h1>", unsafe_allow_html=True)
+    st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=280)
     st.markdown("<p>Click below to start the random selection. Good luck!</p>", unsafe_allow_html=True)
     
     if st.button("Random"):
@@ -258,6 +267,10 @@ elif st.session_state.step == 10:
 
 elif st.session_state.step == 11:
     st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
+    try:
+        st.image("cinema_seats.png", width=420)
+    except:
+        pass
     st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
     st.markdown(f"<p>Suite Seat 2 (AA7 and AA8) : {st.session_state.names_ordered[2]} and {st.session_state.names_ordered[3]}</p>", unsafe_allow_html=True)
     st.markdown(f"<p>Prime Seat 1 (A7) : {st.session_state.names_ordered[4]}</p>", unsafe_allow_html=True)
