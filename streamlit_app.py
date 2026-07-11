@@ -277,7 +277,7 @@ elif st.session_state.step == 10:
 elif st.session_state.step == 11:
     st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
     try:
-        st.image("cinema_seats.png", width=315)
+        st.image("cinema_seat.png", width=315)
     except:
         pass
     st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
