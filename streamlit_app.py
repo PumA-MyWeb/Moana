@@ -84,11 +84,10 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
     }
 
-    /* ปรับแต่งตำแหน่งปุ่มลับ "Good luck!" ให้ชิดประโยคบนเป็นเนื้อเดียวกัน */
     .luck-marker { display: none; }
     
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] {
-        margin-top: -14px !important; /* ลบช่องว่างของระบบทิ้งทั้งหมด เพื่อดึงขึ้นมาต่อท้ายเหมือนกด Enter */
+        margin-top: -14px !important;
     }
 
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
