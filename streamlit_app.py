@@ -9,6 +9,8 @@ if "secret_lock" not in st.session_state:
     st.session_state.secret_lock = False
 if "lang" not in st.session_state:
     st.session_state.lang = "EN"
+if "show_lang_menu" not in st.session_state:
+    st.session_state.show_lang_menu = False
 
 t = {
     "EN": {
@@ -179,6 +181,53 @@ st.markdown("""
         background-size: 14px 14px !important;
     }
 
+    .popover-card {
+        position: fixed !important;
+        top: 60px !important;
+        right: 15px !important;
+        background: #ffffff !important;
+        border-radius: 24px !important;
+        padding: 24px !important;
+        width: 290px !important;
+        z-index: 10005 !important;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.25) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .popover-title {
+        color: #000000 !important;
+        font-family: 'Prompt', Arial, sans-serif !important;
+        font-size: 22px !important;
+        font-weight: 500 !important;
+        text-align: left !important;
+        margin: 0 0 4px 0 !important;
+    }
+
+    .popover-marker-th, .popover-marker-en { display: none; }
+
+    div[data-testid="stElementContainer"]:has(.popover-marker-th) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button,
+    div[data-testid="stElementContainer"]:has(.popover-marker-en) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
+        background: #ffffff !important;
+        border-radius: 12px !important;
+        color: #333333 !important;
+        width: 100% !important;
+        height: 48px !important;
+        padding: 0 0 0 48px !important;
+        font-family: 'Prompt', Arial, sans-serif !important;
+        font-size: 16px !important;
+        text-align: left !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        background-repeat: no-repeat !important;
+        background-position: 16px center !important;
+        background-size: 20px 20px !important;
+        box-shadow: none !important;
+    }
+
     .luck-marker { display: none; }
     
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] {
@@ -307,9 +356,49 @@ st.markdown('<div class="custom-header"><img class="header-logo" src="https://up
 
 st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
 if st.button(st.session_state.lang, key="lang_toggle_btn"):
-    st.session_state.lang = "TH" if st.session_state.lang == "EN" else "EN"
-    st.session_state.step = 0
+    st.session_state.show_lang_menu = not st.session_state.show_lang_menu
     st.rerun()
+
+if st.session_state.show_lang_menu:
+    bg_checked = "background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a73e8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-%4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3Ccircle cx='12' cy='12' r='5'/%3E%3C/svg%3E\") !important;"
+    bg_unchecked = "background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-%4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E\") !important;"
+    
+    th_bg = bg_checked if current_lang == "TH" else bg_unchecked
+    en_bg = bg_checked if current_lang == "EN" else bg_unchecked
+    th_border = "border: 1px solid #1a73e8 !important;" if current_lang == "TH" else "border: 1px solid #dcdcdc !important;"
+    en_border = "border: 1px solid #1a73e8 !important;" if current_lang == "EN" else "border: 1px solid #dcdcdc !important;"
+    
+    st.markdown(f"""
+        <style>
+        div[data-testid="stElementContainer"]:has(.popover-marker-th) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {{
+            {th_bg}
+            {th_border}
+        }}
+        div[data-testid="stElementContainer"]:has(.popover-marker-en) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {{
+            {en_bg}
+            {en_border}
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="popover-card">', unsafe_allow_html=True)
+    st.markdown(f"<div class='popover-title'>{'เปลี่ยนภาษา' if current_lang == 'TH' else 'Change language'}</div>", unsafe_allow_html=True)
+    
+    st.markdown('<div class="popover-marker-th"></div>', unsafe_allow_html=True)
+    if st.button("ภาษาไทย", key="lang_th_option"):
+        st.session_state.lang = "TH"
+        st.session_state.show_lang_menu = False
+        st.session_state.step = 0
+        st.rerun()
+        
+    st.markdown('<div class="popover-marker-en"></div>', unsafe_allow_html=True)
+    if st.button("English", key="lang_en_option"):
+        st.session_state.lang = "EN"
+        st.session_state.show_lang_menu = False
+        st.session_state.step = 0
+        st.rerun()
+        
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.step == 0:
     st.markdown(f"<h1>{t[current_lang]['title']}</h1>", unsafe_allow_html=True)
