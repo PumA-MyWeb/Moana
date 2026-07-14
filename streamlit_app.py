@@ -211,6 +211,14 @@ MAIN_CSS = """
         box-sizing: border-box !important;
     }
     .topbar-gradient svg { height: 28px !important; }
+    .topbar-logo-img {
+        height: 36px !important;
+        width: auto !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+        padding: 2px 6px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25) !important;
+    }
 
     .lang-btn-marker { display: none; }
 
@@ -386,11 +394,7 @@ def language_dialog():
 if st.session_state.step == 0:
     st.markdown("""
         <div class="topbar-gradient">
-            <svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="4" width="34" height="32" rx="7" fill="#ffffff"></rect>
-                <text x="17" y="27" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#1a4c83" text-anchor="middle">SF</text>
-                <text x="42" y="26" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="600" letter-spacing="2" fill="#ffffff">CINEMA</text>
-            </svg>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/SF_Cinema_logo.jpg" alt="SF Cinema" class="topbar-logo-img">
         </div>
     """, unsafe_allow_html=True)
 
