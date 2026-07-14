@@ -10,15 +10,13 @@ if "secret_lock" not in st.session_state:
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
-    
     html, body, .stApp {
         margin: 0 !important;
         padding: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
         overflow-x: hidden !important;
-        background-color: rgb(33, 99, 173) !important;
+        background: linear-gradient(90deg, #000000, #1a4c83) !important;
     }
     
     div[data-testid="stMainBlockContainer"] {
@@ -53,10 +51,10 @@ st.markdown("""
     }
 
     html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
-        font-family: 'Kanit', sans-serif !important;
+        font-family: Arial, Helvetica, sans-serif !important;
         color: rgb(255, 255, 255) !important;
         text-align: center !important;
-        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
+        text-shadow: none !important;
         margin: 0 auto !important;
     }
 
@@ -81,7 +79,7 @@ st.markdown("""
     }
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+        box-shadow: none !important;
     }
 
     .luck-marker { display: none; }
@@ -94,20 +92,19 @@ st.markdown("""
         background: transparent !important;
         border: none !important;
         color: rgb(255, 255, 255) !important;
-        font-family: 'Kanit', sans-serif !important;
+        font-family: Arial, Helvetica, sans-serif !important;
         font-size: 0.95rem !important;
         font-weight: 400 !important;
-        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6) !important;
+        text-shadow: none !important;
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 auto !important;
         cursor: default !important;
         min-height: auto !important;
         line-height: 1.2 !important;
-        -webkit-tap-highlight-color: transparent !important; /* บล็อกแสงแฟลชตอนกดบนมือถือ */
+        -webkit-tap-highlight-color: transparent !important;
     }
     
-    /* บล็อกเอฟเฟกต์การขยับหรือไฮไลต์ทุกรูปแบบเมื่อโดนสัมผัส */
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
     div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
@@ -124,17 +121,17 @@ if st.session_state.step == 0 or st.session_state.step == 11:
     st.markdown("""
         <style>
         div[data-testid="stButton"] > button {
-            background-color: rgb(47, 91, 141) !important;
+            background-color: #05162a !important;
             color: rgb(255, 255, 255) !important;
             border: none !important;
-            font-family: 'Kanit', sans-serif !important;
+            font-family: Arial, Helvetica, sans-serif !important;
             padding: 11px 36px !important;
             border-radius: 4px !important;
             font-size: 16px !important;
             width: auto !important;
             max-width: max-content !important;
             margin: 0 auto !important;
-            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.4) !important;
+            box-shadow: none !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -147,7 +144,7 @@ else:
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
             text-decoration: none !important;
             font-size: 13px !important;
-            font-family: 'Kanit', sans-serif !important;
+            font-family: Arial, Helvetica, sans-serif !important;
             box-shadow: none !important;
             padding: 5px 18px !important;
             border-radius: 4px !important;
@@ -171,11 +168,11 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50% !important;
-            background: repeating-linear-gradient(90deg, rgb(105, 12, 12), rgb(138, 18, 18) 15px, rgb(166, 30, 30) 30px, rgb(138, 18, 18) 45px, rgb(105, 12, 12) 60px);
+            width: 50vw !important;
+            background: repeating-linear-gradient(90deg, #150000, #260000 15px, #3b0000 30px, #260000 45px, #150000 60px);
             z-index: 99999 !important;
             animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
         }
         .left-p { left: 0 !important; transform-origin: left; }
         .right-p { right: 0 !important; transform-origin: right; }
@@ -194,11 +191,11 @@ elif st.session_state.step == 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50% !important;
-            background: repeating-linear-gradient(90deg, rgb(105, 12, 12), rgb(138, 18, 18) 15px, rgb(166, 30, 30) 30px, rgb(138, 18, 18) 45px, rgb(105, 12, 12) 60px);
+            width: 50vw !important;
+            background: repeating-linear-gradient(90deg, #150000, #260000 15px, #3b0000 30px, #260000 45px, #150000 60px);
             z-index: 99999 !important;
             animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
         }
         .left-p { left: 0 !important; transform-origin: left; }
         .right-p { right: 0 !important; transform-origin: right; }
@@ -214,7 +211,9 @@ elif st.session_state.step == 11:
 if st.session_state.step == 0:
     st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
+    
     st.markdown("<p style='margin-bottom: 0px !important;'>Click below to start the random selection.</p>", unsafe_allow_html=True)
+    
     st.markdown('<div class="luck-marker"></div>', unsafe_allow_html=True)
     if st.button("Good luck!", key="invisible_good_luck_trigger"):
         st.session_state.secret_lock = not st.session_state.secret_lock
