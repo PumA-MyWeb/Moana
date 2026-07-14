@@ -1,16 +1,12 @@
 import streamlit as st
 import random
 
-if "step" not in st.session_state:
-    st.session_state.step = 0
 if "names_ordered" not in st.session_state:
     st.session_state.names_ordered = []
 if "secret_lock" not in st.session_state:
     st.session_state.secret_lock = False
 if "lang" not in st.session_state:
     st.session_state.lang = "EN"
-if "show_lang_menu" not in st.session_state:
-    st.session_state.show_lang_menu = False
 
 t = {
     "EN": {
@@ -30,7 +26,8 @@ t = {
         "p2_label": "Prime Seat 2 (A8) :",
         "p3_label": "Prime Seat 3 (A9) :",
         "reset": "Reset Selection",
-        "names": {"Cat": "Cat", "Fairway": "Fairway", "Ice": "Ice", "Phu": "Phu", "Plewai": "Plewai", "Primo": "Primo", "Puma": "Puma"}
+        "names": {"Cat": "Cat", "Fairway": "Fairway", "Ice": "Ice", "Phu": "Phu", "Plewai": "Plewai", "Primo": "Primo", "Puma": "Puma"},
+        "change_lang": "Change language"
     },
     "TH": {
         "title": "โมอาน่า นั่งไหนดี?",
@@ -49,24 +46,26 @@ t = {
         "p2_label": "แถวล่าง 2 (A8) :",
         "p3_label": "แถวล่าง 3 (A9) :",
         "reset": "สุ่มใหม่ดีกว่า",
-        "names": {"Cat": "แคท", "Fairway": "แฟร์เวย์", "Ice": "ไอซ์", "Phu": "ภู", "Plewai": "เปลหวาย", "Primo": "พรีโม่", "Puma": "พูม่า"}
+        "names": {"Cat": "แคท", "Fairway": "แฟร์เวย์", "Ice": "ไอซ์", "Phu": "ภู", "Plewai": "เปลหวาย", "Primo": "พรีโม่", "Puma": "พูม่า"},
+        "change_lang": "เปลี่ยนภาษา"
     }
 }
 
 current_lang = st.session_state.lang
 
+# กำหนดสเต็ปเริ่มต้นถ้ายังไม่มี
+if f"step_{current_lang}" not in st.session_state:
+    st.session_state[f"step_{current_lang}"] = 0
+
+step_key = f"step_{current_lang}"
+current_step = st.session_state[step_key]
+
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
     
-    /* ซ่อน UI หลักของ Streamlit ที่คอยบังด้านบน */
-    header[data-testid="stHeader"] {
-        display: none !important;
-    }
-    footer {
-        visibility: hidden !important;
-    }
-    div[data-testid="stDecoration"] {
+    /* ซ่อน UI ส่วนเกินของ Streamlit */
+    header[data-testid="stHeader"], footer, div[data-testid="stDecoration"] {
         display: none !important;
     }
     
@@ -79,6 +78,7 @@ st.markdown("""
         background: linear-gradient(90deg, #000000, #1a4c83) !important;
     }
     
+    /* ปรับระยะห่างของเนื้อหาไม่ให้ห่างจากแถบด้านบนเกินไปในมือถือ */
     div[data-testid="stMainBlockContainer"] {
         display: flex !important;
         flex-direction: column !important;
@@ -86,7 +86,7 @@ st.markdown("""
         align-items: center !important;
         min-height: 100vh !important;
         max-width: 100vw !important;
-        padding: 80px 20px 20px 20px !important;
+        padding: 65px 20px 20px 20px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
     }
@@ -110,8 +110,9 @@ st.markdown("""
         width: 100% !important;
     }
 
-    html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
-        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
+    /* บังคับฟอนต์ไม่มีหัวสำหรับภาษาไทยและอังกฤษทั่วทั้งแอป */
+    html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label, input, button, select, textarea {
+        font-family: 'Prompt', Arial, sans-serif !important;
         color: rgb(255, 255, 255) !important;
         text-align: center !important;
         text-shadow: none !important;
@@ -139,9 +140,9 @@ st.markdown("""
     }
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
-        box-shadow: none !important;
     }
 
+    /* แถบ Header สีฟ้า */
     .custom-header {
         position: fixed !important;
         top: 0 !important;
@@ -154,35 +155,39 @@ st.markdown("""
         align-items: center !important;
         justify-content: center !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
     }
 
+    /* โลโก้ SF เวอร์ชันใหม่ ขึ้นร้อยเปอร์เซ็นต์ */
     .header-logo {
-        height: 28px !important;
+        height: 24px !important;
         width: auto !important;
         object-fit: contain !important;
     }
 
-    .lang-btn-marker { display: none; }
+    /* จัดการปุ่ม Popover เปลี่ยนภาษาให้เกาะขอบขวาและกึ่งกลางแนว Y */
+    .popover-container-marker { display: none; }
     
-    div[data-testid="stElementContainer"]:has(.lang-btn-marker) + div[data-testid="stElementContainer"] {
+    div[data-testid="stElementContainer"]:has(.popover-container-marker) + div[data-testid="stElementContainer"] {
         position: fixed !important;
-        top: 10px !important;
+        top: 0 !important;
         right: 15px !important;
         z-index: 9995 !important;
-        width: auto !important;
+        height: 50px !important;
         margin: 0 !important;
+        display: flex !important;
+        align-items: center !important; /* กึ่งกลางแนว Y เสมอ */
     }
 
-    div[data-testid="stElementContainer"]:has(.lang-btn-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
+    /* แต่งปุ่มกดหลักของ Popover */
+    div[data-testid="stElementContainer"]:has(.popover-container-marker) + div[data-testid="stElementContainer"] div[data-testid="stPopover"] > button {
         background: rgba(255, 255, 255, 0.2) !important;
         border: 1px solid rgba(255, 255, 255, 0.6) !important;
         color: #ffffff !important;
-        padding: 5px 12px 5px 32px !important;
+        padding: 4px 12px 4px 32px !important;
         font-size: 13px !important;
-        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
         border-radius: 4px !important;
-        box-shadow: none !important;
         height: 30px !important;
         min-height: 30px !important;
         line-height: 1.2 !important;
@@ -190,54 +195,56 @@ st.markdown("""
         background-repeat: no-repeat !important;
         background-position: 10px center !important;
         background-size: 14px 14px !important;
+        width: auto !important;
     }
 
-    /* ปรับตำแหน่งกล่องเลือกภาษาลงมาใต้แถบ Header พอดี */
-    .popover-card {
-        position: fixed !important;
-        top: 58px !important;
-        right: 15px !important;
+    /* แต่งกล่อง Popover คาร์ดสีขาวด้านในให้เหมือน Mockup ของผู้ใช้ */
+    div[data-testid="stPopoverWindow"] {
         background: #ffffff !important;
         border-radius: 24px !important;
-        padding: 24px !important;
-        width: 290px !important;
-        z-index: 10005 !important;
+        padding: 10px !important;
         box-shadow: 0 4px 25px rgba(0,0,0,0.3) !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 12px !important;
-        box-sizing: border-box !important;
+        border: none !important;
     }
-    
-    .popover-title {
+
+    /* ปรับแต่งส่วนประกอบวิทยุ (Radio) ภายใน Popover */
+    div[data-testid="stPopoverWindow"] [data-testid="stWidgetLabel"] p {
         color: #000000 !important;
-        font-family: 'Prompt', Arial, sans-serif !important;
-        font-size: 22px !important;
+        font-size: 20px !important;
         font-weight: 500 !important;
         text-align: left !important;
-        margin: 0 0 4px 0 !important;
+        margin-bottom: 12px !important;
     }
 
-    .popover-marker-th, .popover-marker-en { display: none; }
+    div[data-testid="stPopoverWindow"] [data-testid="stRadio"] > div {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
 
-    div[data-testid="stElementContainer"]:has(.popover-marker-th) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button,
-    div[data-testid="stElementContainer"]:has(.popover-marker-en) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
+    div[data-testid="stPopoverWindow"] [data-testid="stRadio"] label {
         background: #ffffff !important;
+        border: 1px solid #dcdcdc !important;
         border-radius: 12px !important;
-        color: #333333 !important;
-        width: 100% !important;
-        height: 48px !important;
-        padding: 0 0 0 48px !important;
-        font-family: 'Prompt', Arial, sans-serif !important;
-        font-size: 16px !important;
-        text-align: left !important;
+        padding: 10px 16px !important;
+        width: 230px !important;
+        min-height: 48px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        background-repeat: no-repeat !important;
-        background-position: 16px center !important;
-        background-size: 20px 20px !important;
-        box-shadow: none !important;
+        box-sizing: border-box !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    div[data-testid="stPopoverWindow"] [data-testid="stRadio"] label:has(input:checked) {
+        border-color: #1a73e8 !important;
+    }
+
+    div[data-testid="stPopoverWindow"] [data-testid="stRadio"] label p {
+        color: #333333 !important;
+        font-size: 16px !important;
+        text-align: left !important;
+        margin: 0 0 0 8px !important;
     }
 
     .luck-marker { display: none; }
@@ -250,172 +257,95 @@ st.markdown("""
         background: transparent !important;
         border: none !important;
         color: rgb(255, 255, 255) !important;
-        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
         font-size: 0.95rem !important;
         font-weight: 400 !important;
-        text-shadow: none !important;
         box-shadow: none !important;
         padding: 0 !important;
-        margin: 0 auto !important;
         cursor: default !important;
         min-height: auto !important;
-        line-height: 1.2 !important;
-        -webkit-tap-highlight-color: transparent !important;
-    }
-    
-    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:hover,
-    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:active,
-    div[data-testid="stElementContainer"]:has(.luck-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button:focus {
-        background: transparent !important;
-        border: none !important;
-        color: rgb(255, 255, 255) !important;
-        box-shadow: none !important;
-        -webkit-tap-highlight-color: transparent !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-if st.session_state.step == 0 or st.session_state.step == 11:
+# ปรับปรุงสไตล์ปุ่มหลัก
+if current_step == 0 or current_step == 11:
     st.markdown("""
         <style>
-        div[data-testid="stButton"] > button {
+        div[data-testid="stAppViewBlockContainer"] div[data-testid="stButton"] > button {
             background-color: #05162a !important;
             color: rgb(255, 255, 255) !important;
             border: none !important;
-            font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
             padding: 11px 36px !important;
             border-radius: 4px !important;
             font-size: 16px !important;
-            width: auto !important;
-            max-width: max-content !important;
-            margin: 0 auto !important;
-            box-shadow: none !important;
         }
         </style>
     """, unsafe_allow_html=True)
 else:
     st.markdown("""
         <style>
-        div[data-testid="stButton"] > button {
+        div[data-testid="stAppViewBlockContainer"] div[data-testid="stButton"] > button {
             background-color: rgba(255, 255, 255, 0.1) !important;
             color: rgb(255, 255, 255) !important;
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
-            text-decoration: none !important;
             font-size: 13px !important;
-            font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
-            box-shadow: none !important;
             padding: 5px 18px !important;
             border-radius: 4px !important;
-            width: auto !important;
-            max-width: max-content !important;
-            margin: 12px auto 0 auto !important;
-            transition: all 0.2s ease !important;
-        }
-        div[data-testid="stButton"] > button:hover {
-            background-color: rgba(255, 255, 255, 0.25) !important;
-            border-color: rgba(255, 255, 255, 0.7) !important;
-            color: rgb(255, 255, 255) !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
-if st.session_state.step > 0 and st.session_state.step < 11:
+# แอนิเมชันผ้าม่าน
+if 0 < current_step < 11:
     st.markdown("""
         <style>
         .curtain-panel {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 50vw !important;
+            position: fixed; top: 0; height: 100vh; width: 50vw !important;
             background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
-            z-index: 99999 !important;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
+            z-index: 99999 !important; box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0 !important; animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: left; }
         .right-p { right: 0 !important; animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: right; }
-        @keyframes curtainClose {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1.02); }
-        }
+        @keyframes curtainClose { 0% { transform: scaleX(0); } 100% { transform: scaleX(1.02); } }
         </style>
-        <div class="curtain-panel left-p"></div>
-        <div class="curtain-panel right-p"></div>
+        <div class="curtain-panel left-p"></div><div class="curtain-panel right-p"></div>
     """, unsafe_allow_html=True)
-elif st.session_state.step == 11:
+elif current_step == 11:
     st.markdown("""
         <style>
         .curtain-panel {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 50vw !important;
+            position: fixed; top: 0; height: 100vh; width: 50vw !important;
             background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
-            z-index: 99999 !important;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
+            z-index: 99999 !important; box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
         .left-p { left: 0 !important; animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: left; }
         .right-p { right: 0 !important; animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: right; }
-        @keyframes curtainOpen {
-            0% { transform: scaleX(1.02); }
-            100% { transform: scaleX(0); }
-        }
+        @keyframes curtainOpen { 0% { transform: scaleX(1.02); } 100% { transform: scaleX(0); } }
         </style>
-        <div class="curtain-panel left-p"></div>
-        <div class="curtain-panel right-p"></div>
+        <div class="curtain-panel left-p"></div><div class="curtain-panel right-p"></div>
     """, unsafe_allow_html=True)
 
-st.markdown('<div class="custom-header"><img class="header-logo" src="https://upload.wikimedia.org/wikipedia/th/f/f3/SF_Cinema_Logo.png"></div>', unsafe_allow_html=True)
+# วาดส่วนของแถบด้านบน
+st.markdown('<div class="custom-header"><img class="header-logo" src="https://worldvectorlogo.com/download/sf-1.svg"></div>', unsafe_allow_html=True)
 
-st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
-if st.button(st.session_state.lang, key="lang_toggle_btn"):
-    st.session_state.show_lang_menu = not st.session_state.show_lang_menu
-    st.rerun()
-
-if st.session_state.show_lang_menu:
-    bg_checked = "background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a73e8'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-%4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3Ccircle cx='12' cy='12' r='5'/%3E%3C/svg%3E\") !important;"
-    bg_unchecked = "background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-%4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E\") !important;"
-    
-    th_bg = bg_checked if current_lang == "TH" else bg_unchecked
-    en_bg = bg_checked if current_lang == "EN" else bg_unchecked
-    th_border = "border: 1px solid #1a73e8 !important;" if current_lang == "TH" else "border: 1px solid #dcdcdc !important;"
-    en_border = "border: 1px solid #1a73e8 !important;" if current_lang == "EN" else "border: 1px solid #dcdcdc !important;"
-    
-    st.markdown(f"""
-        <style>
-        div[data-testid="stElementContainer"]:has(.popover-marker-th) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {{
-            {th_bg}
-            {th_border}
-        }}
-        div[data-testid="stElementContainer"]:has(.popover-marker-en) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {{
-            {en_bg}
-            {en_border}
-        }}
-        </style>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<div class="popover-card">', unsafe_allow_html=True)
-    st.markdown(f"<div class='popover-title'>{'เปลี่ยนภาษา' if current_lang == 'TH' else 'Change language'}</div>", unsafe_allow_html=True)
-    
-    st.markdown('<div class="popover-marker-th"></div>', unsafe_allow_html=True)
-    if st.button("ภาษาไทย", key="lang_th_option"):
-        st.session_state.lang = "TH"
-        st.session_state.show_lang_menu = False
-        st.session_state.step = 0
+# ตัวเลือกภาษา Popover แท้ ยึดขวาเกาะกลาง Y แม่นยำ
+st.markdown('<div class="popover-container-marker"></div>', unsafe_allow_html=True)
+with st.popover(st.session_state.lang):
+    selected_lang = st.radio(
+        t[current_lang]["change_lang"],
+        options=["ภาษาไทย", "English"],
+        index=0 if current_lang == "TH" else 1,
+        label_visibility="visible"
+    )
+    new_lang = "TH" if selected_lang == "ภาษาไทย" else "EN"
+    if new_lang != st.session_state.lang:
+        st.session_state.lang = new_lang
         st.rerun()
-        
-    st.markdown('<div class="popover-marker-en"></div>', unsafe_allow_html=True)
-    if st.button("English", key="lang_en_option"):
-        st.session_state.lang = "EN"
-        st.session_state.show_lang_menu = False
-        st.session_state.step = 0
-        st.rerun()
-        
-    st.markdown('</div>', unsafe_allow_html=True)
 
-if st.session_state.step == 0:
+# --- ตรรกะแสดงผลตามสเต็ปเดิม ---
+if current_step == 0:
     st.markdown(f"<h1>{t[current_lang]['title']}</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
-    
     st.markdown(f"<p style='margin-bottom: 0px !important;'>{t[current_lang]['subtitle']}</p>", unsafe_allow_html=True)
     
     st.markdown('<div class="luck-marker"></div>', unsafe_allow_html=True)
@@ -424,12 +354,10 @@ if st.session_state.step == 0:
 
     if st.button(t[current_lang]['random']):
         all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
-        
         if st.session_state.secret_lock:
             fixed_pair = ["Cat", "Primo"]
             others = [p for p in all_names if p not in fixed_pair]
             random.shuffle(others)
-            
             b = random.randint(1, 4)
             if b == 1:
                 suite1 = fixed_pair.copy()
@@ -447,97 +375,90 @@ if st.session_state.step == 0:
                 p_pair = fixed_pair.copy()
                 random.shuffle(p_pair)
                 prime = [p_pair[0], p_pair[1], others.pop()]
-            elif b == 4:
+            else:
                 suite1 = [others.pop(), others.pop()]
                 suite2 = [others.pop(), others.pop()]
                 p_pair = fixed_pair.copy()
                 random.shuffle(p_pair)
                 prime = [others.pop(), p_pair[0], p_pair[1]]
-                
             st.session_state.names_ordered = suite1 + suite2 + prime
         else:
             random.shuffle(all_names)
-            suite1 = [all_names[0], all_names[1]]
-            suite2 = [all_names[2], all_names[3]]
-            prime = [all_names[4], all_names[5], all_names[6]]
-            st.session_state.names_ordered = suite1 + suite2 + prime
+            st.session_state.names_ordered = all_names
             
-        st.session_state.step = 1
+        st.session_state[step_key] = 1
         st.rerun()
 
-elif st.session_state.step == 1:
+elif current_step == 1:
     st.markdown(f"<h2>{t[current_lang]['suite1']}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n1"):
-        st.session_state.step = 2
+        st.session_state[step_key] = 2
         st.rerun()
 
-elif st.session_state.step == 2:
+elif current_step == 2:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[0]]
     st.markdown(f"<h2>{name_val} {t[current_lang]['and']}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n2"):
-        st.session_state.step = 3
+        st.session_state[step_key] = 3
         st.rerun()
 
-elif st.session_state.step == 3:
+elif current_step == 3:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[1]]
     st.markdown(f"<h2>{name_val}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n3"):
-        st.session_state.step = 4
+        st.session_state[step_key] = 4
         st.rerun()
 
-elif st.session_state.step == 4:
+elif current_step == 4:
     st.markdown(f"<h2>{t[current_lang]['suite2']}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n4"):
-        st.session_state.step = 5
+        st.session_state[step_key] = 5
         st.rerun()
 
-elif st.session_state.step == 5:
+elif current_step == 5:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[2]]
     st.markdown(f"<h2>{name_val} {t[current_lang]['and']}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n5"):
-        st.session_state.step = 6
+        st.session_state[step_key] = 6
         st.rerun()
 
-elif st.session_state.step == 6:
+elif current_step == 6:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[3]]
     st.markdown(f"<h2>{name_val}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n6"):
-        st.session_state.step = 7
+        st.session_state[step_key] = 7
         st.rerun()
 
-elif st.session_state.step == 7:
+elif current_step == 7:
     st.markdown(f"<h2>{t[current_lang]['prime_intro']}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n7"):
-        st.session_state.step = 8
+        st.session_state[step_key] = 8
         st.rerun()
 
-elif st.session_state.step == 8:
+elif current_step == 8:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[4]]
     st.markdown(f"<h2>1. {name_val}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n8"):
-        st.session_state.step = 9
+        st.session_state[step_key] = 9
         st.rerun()
 
-elif st.session_state.step == 9:
+elif current_step == 9:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[5]]
     st.markdown(f"<h2>2. {name_val}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n9"):
-        st.session_state.step = 10
+        st.session_state[step_key] = 10
         st.rerun()
 
-elif st.session_state.step == 10:
+elif current_step == 10:
     name_val = t[current_lang]['names'][st.session_state.names_ordered[6]]
     st.markdown(f"<h2>3. {name_val}</h2>", unsafe_allow_html=True)
     if st.button(t[current_lang]['next'], key="n10"):
-        st.session_state.step = 11
+        st.session_state[step_key] = 11
         st.rerun()
 
-elif st.session_state.step == 11:
+elif current_step == 11:
     st.markdown(f"<h2>{t[current_lang]['summary']}</h2>", unsafe_allow_html=True)
-    try:
-        st.image("https://i.ibb.co/1Y5vNx9m/cinema-seats.png", width=315)
-    except:
-        pass
+    st.image("https://i.ibb.co/1Y5vNx9m/cinema-seats.png", width=315)
     
     n0 = t[current_lang]['names'][st.session_state.names_ordered[0]]
     n1 = t[current_lang]['names'][st.session_state.names_ordered[1]]
@@ -554,7 +475,7 @@ elif st.session_state.step == 11:
     st.markdown(f"<p>{t[current_lang]['p3_label']} {n6}</p>", unsafe_allow_html=True)
     
     if st.button(t[current_lang]['reset']):
-        st.session_state.step = 0
+        st.session_state[step_key] = 0
         st.session_state.names_ordered = []
         st.session_state.secret_lock = False
         st.rerun()
