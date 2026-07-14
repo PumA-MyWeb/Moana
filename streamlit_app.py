@@ -59,6 +59,17 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
     
+    /* ซ่อน UI หลักของ Streamlit ที่คอยบังด้านบน */
+    header[data-testid="stHeader"] {
+        display: none !important;
+    }
+    footer {
+        visibility: hidden !important;
+    }
+    div[data-testid="stDecoration"] {
+        display: none !important;
+    }
+    
     html, body, .stApp {
         margin: 0 !important;
         padding: 0 !important;
@@ -181,16 +192,17 @@ st.markdown("""
         background-size: 14px 14px !important;
     }
 
+    /* ปรับตำแหน่งกล่องเลือกภาษาลงมาใต้แถบ Header พอดี */
     .popover-card {
         position: fixed !important;
-        top: 60px !important;
+        top: 58px !important;
         right: 15px !important;
         background: #ffffff !important;
         border-radius: 24px !important;
         padding: 24px !important;
         width: 290px !important;
         z-index: 10005 !important;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.25) !important;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.3) !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 12px !important;
