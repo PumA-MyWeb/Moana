@@ -41,8 +41,8 @@ t = {
         "suite2": "คนที่จะได้นั่งโซฟาหมายเลข 2 ได้แก่",
         "prime_intro": "ต่อไปนี้คือบุคคลที่จะได้นั่งแถวล่างลงมา",
         "summary": "สรุปผลการสุ่มที่นั่ง",
-        "s1_label": "โซฟาหมายเลข 1 (AA5 and AA6) :",
-        "s2_label": "โซฟาหมายเลข 2 (AA7 and AA8) :",
+        "s1_label": "โซฟาหมายเลข 1 (AA5 กับ AA6) :",
+        "s2_label": "โซฟาหมายเลข 2 (AA7 กับ AA8) :",
         "p1_label": "แถวล่าง 1 (A7) :",
         "p2_label": "แถวล่าง 2 (A8) :",
         "p3_label": "แถวล่าง 3 (A9) :",
@@ -55,6 +55,8 @@ current_lang = st.session_state.lang
 
 st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+    
     html, body, .stApp {
         margin: 0 !important;
         padding: 0 !important;
@@ -71,7 +73,7 @@ st.markdown("""
         align-items: center !important;
         min-height: 100vh !important;
         max-width: 100vw !important;
-        padding: 70px 20px 20px 20px !important;
+        padding: 80px 20px 20px 20px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
     }
@@ -96,7 +98,7 @@ st.markdown("""
     }
 
     html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
-        font-family: Arial, Helvetica, sans-serif !important;
+        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
         color: rgb(255, 255, 255) !important;
         text-align: center !important;
         text-shadow: none !important;
@@ -134,11 +136,10 @@ st.markdown("""
         width: 100vw !important;
         height: 50px !important;
         background: linear-gradient(90deg, #2062af, #6a7ebe) !important;
-        z-index: 9999 !important;
+        z-index: 9990 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        box-shadow: none !important;
         margin: 0 !important;
         padding: 0 !important;
     }
@@ -149,36 +150,33 @@ st.markdown("""
         object-fit: contain !important;
     }
 
-    .lang-container {
+    .lang-btn-marker { display: none; }
+    
+    div[data-testid="stElementContainer"]:has(.lang-btn-marker) + div[data-testid="stElementContainer"] {
         position: fixed !important;
-        top: 9px !important;
+        top: 10px !important;
         right: 15px !important;
-        z-index: 10000 !important;
+        z-index: 9995 !important;
+        width: auto !important;
         margin: 0 !important;
     }
 
-    .lang-container div[data-testid="stButton"] button {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    div[data-testid="stElementContainer"]:has(.lang-btn-marker) + div[data-testid="stElementContainer"] div[data-testid="stButton"] button {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
         color: #ffffff !important;
-        padding: 4px 10px 4px 28px !important;
+        padding: 5px 12px 5px 32px !important;
         font-size: 13px !important;
-        font-family: Arial, Helvetica, sans-serif !important;
+        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
         border-radius: 4px !important;
         box-shadow: none !important;
-        height: 32px !important;
-        min-height: 32px !important;
-        line-height: 1 !important;
-    }
-
-    .lang-icon-overlay {
-        position: absolute !important;
-        left: 8px !important;
-        top: 8px !important;
-        width: 15px !important;
-        height: 15px !important;
-        z-index: 10001 !important;
-        pointer-events: none !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        line-height: 1.2 !important;
+        background-image: url('https://img.icons8.com/ios-filled/50/ffffff/globe.png') !important;
+        background-repeat: no-repeat !important;
+        background-position: 10px center !important;
+        background-size: 14px 14px !important;
     }
 
     .luck-marker { display: none; }
@@ -191,7 +189,7 @@ st.markdown("""
         background: transparent !important;
         border: none !important;
         color: rgb(255, 255, 255) !important;
-        font-family: Arial, Helvetica, sans-serif !important;
+        font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
         font-size: 0.95rem !important;
         font-weight: 400 !important;
         text-shadow: none !important;
@@ -223,7 +221,7 @@ if st.session_state.step == 0 or st.session_state.step == 11:
             background-color: #05162a !important;
             color: rgb(255, 255, 255) !important;
             border: none !important;
-            font-family: Arial, Helvetica, sans-serif !important;
+            font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
             padding: 11px 36px !important;
             border-radius: 4px !important;
             font-size: 16px !important;
@@ -243,7 +241,7 @@ else:
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
             text-decoration: none !important;
             font-size: 13px !important;
-            font-family: Arial, Helvetica, sans-serif !important;
+            font-family: 'Prompt', Arial, Helvetica, sans-serif !important;
             box-shadow: none !important;
             padding: 5px 18px !important;
             border-radius: 4px !important;
@@ -267,20 +265,16 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50% !important;
+            width: 50vw !important;
             background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
             z-index: 99999 !important;
             box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
-        .left-p { left: 0 !important; animation: curtainCloseLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        .right-p { right: 0 !important; animation: curtainCloseRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        @keyframes curtainCloseLeft {
-            0% { width: 0; }
-            100% { width: 50.5%; }
-        }
-        @keyframes curtainCloseRight {
-            0% { width: 0; }
-            100% { width: 50.5%; }
+        .left-p { left: 0 !important; animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: left; }
+        .right-p { right: 0 !important; animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: right; }
+        @keyframes curtainClose {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1.02); }
         }
         </style>
         <div class="curtain-panel left-p"></div>
@@ -293,19 +287,16 @@ elif st.session_state.step == 11:
             position: fixed;
             top: 0;
             height: 100vh;
+            width: 50vw !important;
             background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
             z-index: 99999 !important;
             box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
-        .left-p { left: 0 !important; animation: curtainOpenLeft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        .right-p { right: 0 !important; animation: curtainOpenRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        @keyframes curtainOpenLeft {
-            0% { width: 50.5%; }
-            100% { width: 0; }
-        }
-        @keyframes curtainOpenRight {
-            0% { width: 50.5%; }
-            100% { width: 0; }
+        .left-p { left: 0 !important; animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: left; }
+        .right-p { right: 0 !important; animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; transform-origin: right; }
+        @keyframes curtainOpen {
+            0% { transform: scaleX(1.02); }
+            100% { transform: scaleX(0); }
         }
         </style>
         <div class="curtain-panel left-p"></div>
@@ -314,12 +305,11 @@ elif st.session_state.step == 11:
 
 st.markdown('<div class="custom-header"><img class="header-logo" src="https://upload.wikimedia.org/wikipedia/th/f/f3/SF_Cinema_Logo.png"></div>', unsafe_allow_html=True)
 
-st.markdown('<div class="lang-container"><img class="lang-icon-overlay" src="https://img.icons8.com/ios-filled/50/ffffff/globe.png">', unsafe_allow_html=True)
+st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
 if st.button(st.session_state.lang, key="lang_toggle_btn"):
     st.session_state.lang = "TH" if st.session_state.lang == "EN" else "EN"
     st.session_state.step = 0
     st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.step == 0:
     st.markdown(f"<h1>{t[current_lang]['title']}</h1>", unsafe_allow_html=True)
