@@ -7,6 +7,51 @@ if "names_ordered" not in st.session_state:
     st.session_state.names_ordered = []
 if "secret_lock" not in st.session_state:
     st.session_state.secret_lock = False
+if "lang" not in st.session_state:
+    st.session_state.lang = "EN"
+
+t = {
+    "EN": {
+        "title": "Moana Opportunity",
+        "subtitle": "Click below to start the random selection.",
+        "luck": "Good luck!",
+        "random": "Random",
+        "next": "Next",
+        "suite1": "The people who will sit on Suite Seat 1 are",
+        "and": "and",
+        "suite2": "The people who will sit on Suite Seat 2 are",
+        "prime_intro": "Next, these are the people who will sit on Prime Seat",
+        "summary": "Summary of Seating Arrangements",
+        "s1_label": "Suite Seat 1 (AA5 and AA6) :",
+        "s2_label": "Suite Seat 2 (AA7 and AA8) :",
+        "p1_label": "Prime Seat 1 (A7) :",
+        "p2_label": "Prime Seat 2 (A8) :",
+        "p3_label": "Prime Seat 3 (A9) :",
+        "reset": "Reset Selection",
+        "names": {"Cat": "Cat", "Fairway": "Fairway", "Ice": "Ice", "Phu": "Phu", "Plewai": "Plewai", "Primo": "Primo", "Puma": "Puma"}
+    },
+    "TH": {
+        "title": "โมอาน่า นั่งไหนดี?",
+        "subtitle": "กดปุ่มข้างล่างนี้เพื่อเริ่มทำการสุ่ม",
+        "luck": "ขอให้โชคดี",
+        "random": "เริ่มสุ่ม",
+        "next": "ถัดไป",
+        "suite1": "คนที่จะได้นั่งโซฟาหมายเลข 1 ได้แก่",
+        "and": "และ",
+        "suite2": "คนที่จะได้นั่งโซฟาหมายเลข 2 ได้แก่",
+        "prime_intro": "ต่อไปนี้คือบุคคลที่จะได้นั่งแถวล่างลงมา",
+        "summary": "สรุปผลการสุ่มที่นั่ง",
+        "s1_label": "โซฟาหมายเลข 1 (AA5 and AA6) :",
+        "s2_label": "โซฟาหมายเลข 2 (AA7 and AA8) :",
+        "p1_label": "แถวล่าง 1 (A7) :",
+        "p2_label": "แถวล่าง 2 (A8) :",
+        "p3_label": "แถวล่าง 3 (A9) :",
+        "reset": "สุ่มใหม่ดีกว่า",
+        "names": {"Cat": "แคท", "Fairway": "แฟร์เวย์", "Ice": "ไอซ์", "Phu": "ภู", "Plewai": "เปลหวาย", "Primo": "พรีโม่", "Puma": "พูม่า"}
+    }
+}
+
+current_lang = st.session_state.lang
 
 st.markdown("""
     <style>
@@ -26,7 +71,7 @@ st.markdown("""
         align-items: center !important;
         min-height: 100vh !important;
         max-width: 100vw !important;
-        padding: 20px !important;
+        padding: 70px 20px 20px 20px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
     }
@@ -80,6 +125,60 @@ st.markdown("""
     div[data-testid="stImage"] img {
         border-radius: 8px !important;
         box-shadow: none !important;
+    }
+
+    .custom-header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 50px !important;
+        background: linear-gradient(90deg, #2062af, #6a7ebe) !important;
+        z-index: 9999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .header-logo {
+        height: 28px !important;
+        width: auto !important;
+        object-fit: contain !important;
+    }
+
+    .lang-container {
+        position: fixed !important;
+        top: 9px !important;
+        right: 15px !important;
+        z-index: 10000 !important;
+        margin: 0 !important;
+    }
+
+    .lang-container div[data-testid="stButton"] button {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        color: #ffffff !important;
+        padding: 4px 10px 4px 28px !important;
+        font-size: 13px !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        border-radius: 4px !important;
+        box-shadow: none !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        line-height: 1 !important;
+    }
+
+    .lang-icon-overlay {
+        position: absolute !important;
+        left: 8px !important;
+        top: 8px !important;
+        width: 15px !important;
+        height: 15px !important;
+        z-index: 10001 !important;
+        pointer-events: none !important;
     }
 
     .luck-marker { display: none; }
@@ -168,17 +267,20 @@ if st.session_state.step > 0 and st.session_state.step < 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50vw !important;
-            background: repeating-linear-gradient(90deg, #150000, #260000 15px, #3b0000 30px, #260000 45px, #150000 60px);
+            width: 50% !important;
+            background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
             z-index: 99999 !important;
-            animation: curtainClose 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
-        .left-p { left: 0 !important; transform-origin: left; }
-        .right-p { right: 0 !important; transform-origin: right; }
-        @keyframes curtainClose {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1); }
+        .left-p { left: 0 !important; animation: curtainCloseLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .right-p { right: 0 !important; animation: curtainCloseRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        @keyframes curtainCloseLeft {
+            0% { width: 0; }
+            100% { width: 50.5%; }
+        }
+        @keyframes curtainCloseRight {
+            0% { width: 0; }
+            100% { width: 50.5%; }
         }
         </style>
         <div class="curtain-panel left-p"></div>
@@ -191,34 +293,45 @@ elif st.session_state.step == 11:
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 50vw !important;
-            background: repeating-linear-gradient(90deg, #150000, #260000 15px, #3b0000 30px, #260000 45px, #150000 60px);
+            background: repeating-linear-gradient(90deg, #0a0000, #170202 15px, #260404 30px, #170202 45px, #0a0000 60px);
             z-index: 99999 !important;
-            animation: curtainOpen 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7);
         }
-        .left-p { left: 0 !important; transform-origin: left; }
-        .right-p { right: 0 !important; transform-origin: right; }
-        @keyframes curtainOpen {
-            0% { transform: scaleX(1); }
-            100% { transform: scaleX(0); }
+        .left-p { left: 0 !important; animation: curtainOpenLeft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .right-p { right: 0 !important; animation: curtainOpenRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        @keyframes curtainOpenLeft {
+            0% { width: 50.5%; }
+            100% { width: 0; }
+        }
+        @keyframes curtainOpenRight {
+            0% { width: 50.5%; }
+            100% { width: 0; }
         }
         </style>
         <div class="curtain-panel left-p"></div>
         <div class="curtain-panel right-p"></div>
     """, unsafe_allow_html=True)
 
+st.markdown('<div class="custom-header"><img class="header-logo" src="https://upload.wikimedia.org/wikipedia/th/f/f3/SF_Cinema_Logo.png"></div>', unsafe_allow_html=True)
+
+st.markdown('<div class="lang-container"><img class="lang-icon-overlay" src="https://img.icons8.com/ios-filled/50/ffffff/globe.png">', unsafe_allow_html=True)
+if st.button(st.session_state.lang, key="lang_toggle_btn"):
+    st.session_state.lang = "TH" if st.session_state.lang == "EN" else "EN"
+    st.session_state.step = 0
+    st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
+
 if st.session_state.step == 0:
-    st.markdown("<h1>Moana Opportunity</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1>{t[current_lang]['title']}</h1>", unsafe_allow_html=True)
     st.image("https://lumiere-a.akamaihd.net/v1/images/moa_canon_poster-4x5now_6eed187f.jpeg", width=210)
     
-    st.markdown("<p style='margin-bottom: 0px !important;'>Click below to start the random selection.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='margin-bottom: 0px !important;'>{t[current_lang]['subtitle']}</p>", unsafe_allow_html=True)
     
     st.markdown('<div class="luck-marker"></div>', unsafe_allow_html=True)
-    if st.button("Good luck!", key="invisible_good_luck_trigger"):
+    if st.button(t[current_lang]['luck'], key="invisible_good_luck_trigger"):
         st.session_state.secret_lock = not st.session_state.secret_lock
 
-    if st.button("Random"):
+    if st.button(t[current_lang]['random']):
         all_names = ["Cat", "Fairway", "Ice", "Phu", "Plewai", "Primo", "Puma"]
         
         if st.session_state.secret_lock:
@@ -262,78 +375,94 @@ if st.session_state.step == 0:
         st.rerun()
 
 elif st.session_state.step == 1:
-    st.markdown("<h2>The people who will sit on Suite Seat 1 are</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n1"):
+    st.markdown(f"<h2>{t[current_lang]['suite1']}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n1"):
         st.session_state.step = 2
         st.rerun()
 
 elif st.session_state.step == 2:
-    st.markdown(f"<h2>{st.session_state.names_ordered[0]} and</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n2"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[0]]
+    st.markdown(f"<h2>{name_val} {t[current_lang]['and']}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n2"):
         st.session_state.step = 3
         st.rerun()
 
 elif st.session_state.step == 3:
-    st.markdown(f"<h2>{st.session_state.names_ordered[1]}</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n3"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[1]]
+    st.markdown(f"<h2>{name_val}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n3"):
         st.session_state.step = 4
         st.rerun()
 
 elif st.session_state.step == 4:
-    st.markdown("<h2>The people who will sit on Suite Seat 2 are</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n4"):
+    st.markdown(f"<h2>{t[current_lang]['suite2']}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n4"):
         st.session_state.step = 5
         st.rerun()
 
 elif st.session_state.step == 5:
-    st.markdown(f"<h2>{st.session_state.names_ordered[2]} and</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n5"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[2]]
+    st.markdown(f"<h2>{name_val} {t[current_lang]['and']}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n5"):
         st.session_state.step = 6
         st.rerun()
 
 elif st.session_state.step == 6:
-    st.markdown(f"<h2>{st.session_state.names_ordered[3]}</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n6"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[3]]
+    st.markdown(f"<h2>{name_val}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n6"):
         st.session_state.step = 7
         st.rerun()
 
 elif st.session_state.step == 7:
-    st.markdown("<h2>Next, these are the people who will sit on Prime Seat</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n7"):
+    st.markdown(f"<h2>{t[current_lang]['prime_intro']}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n7"):
         st.session_state.step = 8
         st.rerun()
 
 elif st.session_state.step == 8:
-    st.markdown(f"<h2>1. {st.session_state.names_ordered[4]}</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n8"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[4]]
+    st.markdown(f"<h2>1. {name_val}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n8"):
         st.session_state.step = 9
         st.rerun()
 
 elif st.session_state.step == 9:
-    st.markdown(f"<h2>2. {st.session_state.names_ordered[5]}</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n9"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[5]]
+    st.markdown(f"<h2>2. {name_val}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n9"):
         st.session_state.step = 10
         st.rerun()
 
 elif st.session_state.step == 10:
-    st.markdown(f"<h2>3. {st.session_state.names_ordered[6]}</h2>", unsafe_allow_html=True)
-    if st.button("Next", key="n10"):
+    name_val = t[current_lang]['names'][st.session_state.names_ordered[6]]
+    st.markdown(f"<h2>3. {name_val}</h2>", unsafe_allow_html=True)
+    if st.button(t[current_lang]['next'], key="n10"):
         st.session_state.step = 11
         st.rerun()
 
 elif st.session_state.step == 11:
-    st.markdown("<h2>Summary of Seating Arrangements</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2>{t[current_lang]['summary']}</h2>", unsafe_allow_html=True)
     try:
         st.image("https://i.ibb.co/1Y5vNx9m/cinema-seats.png", width=315)
     except:
         pass
-    st.markdown(f"<p>Suite Seat 1 (AA5 and AA6) : {st.session_state.names_ordered[0]} and {st.session_state.names_ordered[1]}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>Suite Seat 2 (AA7 and AA8) : {st.session_state.names_ordered[2]} and {st.session_state.names_ordered[3]}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>Prime Seat 1 (A7) : {st.session_state.names_ordered[4]}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>Prime Seat 2 (A8) : {st.session_state.names_ordered[5]}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p>Prime Seat 3 (A9) : {st.session_state.names_ordered[6]}</p>", unsafe_allow_html=True)
     
-    if st.button("Reset Selection"):
+    n0 = t[current_lang]['names'][st.session_state.names_ordered[0]]
+    n1 = t[current_lang]['names'][st.session_state.names_ordered[1]]
+    n2 = t[current_lang]['names'][st.session_state.names_ordered[2]]
+    n3 = t[current_lang]['names'][st.session_state.names_ordered[3]]
+    n4 = t[current_lang]['names'][st.session_state.names_ordered[4]]
+    n5 = t[current_lang]['names'][st.session_state.names_ordered[5]]
+    n6 = t[current_lang]['names'][st.session_state.names_ordered[6]]
+
+    st.markdown(f"<p>{t[current_lang]['s1_label']} {n0} {t[current_lang]['and']} {n1}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>{t[current_lang]['s2_label']} {n2} {t[current_lang]['and']} {n3}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>{t[current_lang]['p1_label']} {n4}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>{t[current_lang]['p2_label']} {n5}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p>{t[current_lang]['p3_label']} {n6}</p>", unsafe_allow_html=True)
+    
+    if st.button(t[current_lang]['reset']):
         st.session_state.step = 0
         st.session_state.names_ordered = []
         st.session_state.secret_lock = False
