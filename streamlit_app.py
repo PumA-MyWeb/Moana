@@ -78,7 +78,14 @@ def tname(name):
 
 lang = st.session_state.lang
 
+FONT_STACK = "'Prompt', Arial, Helvetica, sans-serif" if lang == "TH" else "Arial, Helvetica, sans-serif"
+PADDING_TOP = 118 if st.session_state.step == 0 else 20
+
 st.markdown("""
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+""", unsafe_allow_html=True)
+
+MAIN_CSS = """
     <style>
     html, body, .stApp {
         margin: 0 !important;
@@ -96,7 +103,7 @@ st.markdown("""
         align-items: center !important;
         min-height: 100vh !important;
         max-width: 100vw !important;
-        padding: 118px 20px 20px 20px !important;
+        padding: __PADDING_TOP__px 20px 20px 20px !important;
         margin: 0 auto !important;
         box-sizing: border-box !important;
     }
@@ -126,7 +133,7 @@ st.markdown("""
     }
 
     html, body, [class*="css"], .stMarkdown, p, div, h1, h2, h3, h4, h5, h6, span, label {
-        font-family: Arial, Helvetica, sans-serif !important;
+        font-family: __FONT_STACK__ !important;
         color: rgb(255, 255, 255) !important;
         text-align: center !important;
         text-shadow: none !important;
@@ -167,7 +174,7 @@ st.markdown("""
         background: transparent !important;
         border: none !important;
         color: rgb(255, 255, 255) !important;
-        font-family: Arial, Helvetica, sans-serif !important;
+        font-family: __FONT_STACK__ !important;
         font-size: 0.95rem !important;
         font-weight: 400 !important;
         text-shadow: none !important;
@@ -265,7 +272,11 @@ st.markdown("""
         color: #16213a !important;
     }
     </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(
+    MAIN_CSS.replace("__FONT_STACK__", FONT_STACK).replace("__PADDING_TOP__", str(PADDING_TOP)),
+    unsafe_allow_html=True,
+)
 
 if st.session_state.step == 0 or st.session_state.step == 11:
     st.markdown("""
@@ -274,7 +285,7 @@ if st.session_state.step == 0 or st.session_state.step == 11:
             background-color: #05162a !important;
             color: rgb(255, 255, 255) !important;
             border: none !important;
-            font-family: Arial, Helvetica, sans-serif !important;
+            font-family: __FONT_STACK__ !important;
             padding: 11px 36px !important;
             border-radius: 4px !important;
             font-size: 16px !important;
@@ -284,7 +295,7 @@ if st.session_state.step == 0 or st.session_state.step == 11:
             box-shadow: none !important;
         }
         </style>
-    """, unsafe_allow_html=True)
+    """.replace("__FONT_STACK__", FONT_STACK), unsafe_allow_html=True)
 else:
     st.markdown("""
         <style>
@@ -294,7 +305,7 @@ else:
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
             text-decoration: none !important;
             font-size: 13px !important;
-            font-family: Arial, Helvetica, sans-serif !important;
+            font-family: __FONT_STACK__ !important;
             box-shadow: none !important;
             padding: 5px 18px !important;
             border-radius: 4px !important;
@@ -309,7 +320,7 @@ else:
             color: rgb(255, 255, 255) !important;
         }
         </style>
-    """, unsafe_allow_html=True)
+    """.replace("__FONT_STACK__", FONT_STACK), unsafe_allow_html=True)
 
 if st.session_state.step > 0 and st.session_state.step < 11:
     st.markdown("""
@@ -358,17 +369,6 @@ elif st.session_state.step == 11:
         <div class="curtain-panel right-p"></div>
     """, unsafe_allow_html=True)
 
-st.markdown("""
-    <div class="topbar-gradient">
-        <svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="4" width="34" height="32" rx="7" fill="#ffffff"></rect>
-            <text x="17" y="27" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#1a4c83" text-anchor="middle">SF</text>
-            <text x="42" y="26" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="600" letter-spacing="2" fill="#ffffff">CINEMA</text>
-        </svg>
-    </div>
-""", unsafe_allow_html=True)
-
-
 @st.dialog(t("change_language"))
 def language_dialog():
     th_marker = "\u25cf" if lang == "TH" else "\u25cb"
@@ -383,9 +383,20 @@ def language_dialog():
         st.rerun()
 
 
-st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
-if st.button(f"\U0001f310 {lang}", key="lang_toggle_btn"):
-    language_dialog()
+if st.session_state.step == 0:
+    st.markdown("""
+        <div class="topbar-gradient">
+            <svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="4" width="34" height="32" rx="7" fill="#ffffff"></rect>
+                <text x="17" y="27" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#1a4c83" text-anchor="middle">SF</text>
+                <text x="42" y="26" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="600" letter-spacing="2" fill="#ffffff">CINEMA</text>
+            </svg>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
+    if st.button(f"\U0001f310 {lang}", key="lang_toggle_btn"):
+        language_dialog()
 
 if st.session_state.step == 0:
     st.markdown(f"<h1>{t('title')}</h1>", unsafe_allow_html=True)
