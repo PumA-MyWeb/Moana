@@ -1,5 +1,7 @@
 import streamlit as st
 import random
+import datetime
+from zoneinfo import ZoneInfo
 
 if "step" not in st.session_state:
     st.session_state.step = 0
@@ -9,6 +11,11 @@ if "secret_lock" not in st.session_state:
     st.session_state.secret_lock = False
 if "lang" not in st.session_state:
     st.session_state.lang = "EN"
+if "unlocked" not in st.session_state:
+    st.session_state.unlocked = False
+
+TARGET_DT = datetime.datetime(2026, 7, 17, 14, 30, 0, tzinfo=ZoneInfo("Asia/Bangkok"))
+SECRET_CODE = "PrimxLCxt"
 
 NAMES_TH = {
     "Cat": "แคท",
@@ -41,6 +48,11 @@ TEXT = {
         "change_language": "Change language",
         "lang_th": "ภาษาไทย",
         "lang_en": "English",
+        "lock_title": "Annoying system UwU",
+        "lock_subtitle": "Wait a little longer, otherwise it won't be exciting.",
+        "lock_secret_intro": "There's a secret code, right? Let's try entering it.",
+        "lock_code_placeholder": "Your code",
+        "lock_wrong_code": "Incorrect code, try again.",
     },
     "TH": {
         "title": "โมอาน่า นั่งไหนดี?",
@@ -62,6 +74,11 @@ TEXT = {
         "change_language": "เปลี่ยนภาษา",
         "lang_th": "ภาษาไทย",
         "lang_en": "English",
+        "lock_title": "ระบบกวนบาทา UwU",
+        "lock_subtitle": "รอไปก่อน เดี๋ยวไม่ตื่นเต้น",
+        "lock_secret_intro": "มีรหัสลับใช่มั้ย ลองใส่ดู",
+        "lock_code_placeholder": "รหัสของคุณ",
+        "lock_wrong_code": "รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง",
     },
 }
 
@@ -279,6 +296,34 @@ MAIN_CSS = """
         border-color: #2062af !important;
         color: #16213a !important;
     }
+
+    .countdown-display {
+        font-size: 2.4rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px !important;
+        margin: 14px auto 6px auto !important;
+        font-variant-numeric: tabular-nums !important;
+    }
+
+    div[data-testid="stTextInput"] {
+        width: 260px !important;
+        max-width: 90vw !important;
+        margin: 8px auto 0 auto !important;
+    }
+    div[data-testid="stTextInput"] input {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        border: 1px solid #d7dbe3 !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        box-shadow: none !important;
+    }
+    div[data-testid="stTextInput"] input::placeholder {
+        color: #b7bcc7 !important;
+        opacity: 1 !important;
+    }
     </style>
 """
 st.markdown(
@@ -401,6 +446,60 @@ if st.session_state.step == 0:
     st.markdown('<div class="lang-btn-marker"></div>', unsafe_allow_html=True)
     if st.button(f"\U0001f310 {lang}", key="lang_toggle_btn"):
         language_dialog()
+
+now_bkk = datetime.datetime.now(ZoneInfo("Asia/Bangkok"))
+is_locked = now_bkk < TARGET_DT and not st.session_state.unlocked
+
+if is_locked:
+    st.markdown(f"<h1>{t('lock_title')}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p>{t('lock_subtitle')}</p>", unsafe_allow_html=True)
+
+    target_iso = TARGET_DT.isoformat()
+    st.markdown(f"""
+        <div id="countdown-timer" class="countdown-display">00:00:00:00</div>
+        <script>
+        (function() {{
+            const target = new Date("{target_iso}").getTime();
+            function tick() {{
+                const now = new Date().getTime();
+                const diff = target - now;
+                if (diff <= 0) {{
+                    window.location.reload();
+                    return;
+                }}
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / (1000 * 60)) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+                function pad(n) {{ return String(n).padStart(2, "0"); }}
+                const el = document.getElementById("countdown-timer");
+                if (el) {{
+                    el.textContent = pad(d) + ":" + pad(h) + ":" + pad(m) + ":" + pad(s);
+                }}
+            }}
+            tick();
+            setInterval(tick, 1000);
+        }})();
+        </script>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"<p style='margin-top: 18px;'>{t('lock_secret_intro')}</p>", unsafe_allow_html=True)
+
+    entered_code = st.text_input(
+        "secret code",
+        key="secret_code_input",
+        placeholder=t("lock_code_placeholder"),
+        label_visibility="collapsed",
+    )
+
+    if entered_code:
+        if entered_code.strip() == SECRET_CODE:
+            st.session_state.unlocked = True
+            st.rerun()
+        else:
+            st.markdown(f"<p style='color:#ffb4b4; font-size:0.85rem;'>{t('lock_wrong_code')}</p>", unsafe_allow_html=True)
+
+    st.stop()
 
 if st.session_state.step == 0:
     st.markdown(f"<h1>{t('title')}</h1>", unsafe_allow_html=True)
