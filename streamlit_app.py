@@ -499,7 +499,7 @@ if is_locked:
     )
 
     if entered_code:
-        SECRET_CODE = "PrxmxLxvxsCxt_2818"
+        SECRET_CODE = "P7x6xLx8xsCx8_2818"
         if entered_code.strip() == SECRET_CODE:
             st.session_state.unlocked = True
             st.rerun()
