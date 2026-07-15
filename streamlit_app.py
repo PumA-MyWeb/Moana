@@ -42,9 +42,9 @@ TEXT = {
         "summary_title": "Summary of Seating Arrangements",
         "suite1_row": "Suite Seat 1 (AA5 and AA6) : ",
         "suite2_row": "Suite Seat 2 (AA7 and AA8) : ",
-        "prime1_row": "Prime Seat 1 (A7) : ",
-        "prime2_row": "Prime Seat 2 (A8) : ",
-        "prime3_row": "Prime Seat 3 (A9) : ",
+        "prime1_row": "Prime Seat 1 (A8) : ",
+        "prime2_row": "Prime Seat 2 (A9) : ",
+        "prime3_row": "Prime Seat 3 (A10) : ",
         "reset": "Reset Selection",
         "change_language": "Change language",
         "lang_th": "ภาษาไทย",
@@ -68,9 +68,9 @@ TEXT = {
         "summary_title": "สรุปผลการสุ่มที่นั่ง",
         "suite1_row": "โซฟาหมายเลข 1 (AA5 กับ AA6) : ",
         "suite2_row": "โซฟาหมายเลข 1 (AA7 กับ AA8) : ",
-        "prime1_row": "แถวล่าง 1 (A7) : ",
-        "prime2_row": "แถวล่าง 2 (A8) : ",
-        "prime3_row": "แถวล่าง 3 (A9) : ",
+        "prime1_row": "แถวล่าง 1 (A8) : ",
+        "prime2_row": "แถวล่าง 2 (A9) : ",
+        "prime3_row": "แถวล่าง 3 (A10) : ",
         "reset": "สุ่มใหม่ดีกว่า",
         "change_language": "เปลี่ยนภาษา",
         "lang_th": "ภาษาไทย",
@@ -624,7 +624,7 @@ elif st.session_state.step == 10:
 elif st.session_state.step == 11:
     st.markdown(f"<h2>{t('summary_title')}</h2>", unsafe_allow_html=True)
     try:
-        st.image("https://i.ibb.co/1Y5vNx9m/cinema-seats.png", width=315)
+        st.image("https://i.ibb.co/bRXxMh56/Screenshot-2026-07-15-163623.png", width=315)
     except:
         pass
     n = st.session_state.names_ordered
