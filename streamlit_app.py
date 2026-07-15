@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import random
 import datetime
 from zoneinfo import ZoneInfo
@@ -297,14 +298,6 @@ MAIN_CSS = """
         color: #16213a !important;
     }
 
-    .countdown-display {
-        font-size: 2.4rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 2px !important;
-        margin: 14px auto 6px auto !important;
-        font-variant-numeric: tabular-nums !important;
-    }
-
     div[data-testid="stTextInput"] {
         width: 260px !important;
         max-width: 90vw !important;
@@ -455,33 +448,47 @@ if is_locked:
     st.markdown(f"<p>{t('lock_subtitle')}</p>", unsafe_allow_html=True)
 
     target_iso = TARGET_DT.isoformat()
-    st.markdown(f"""
-        <div id="countdown-timer" class="countdown-display">00:00:00:00</div>
-        <script>
-        (function() {{
-            const target = new Date("{target_iso}").getTime();
-            function tick() {{
-                const now = new Date().getTime();
-                const diff = target - now;
-                if (diff <= 0) {{
-                    window.location.reload();
-                    return;
-                }}
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const m = Math.floor((diff / (1000 * 60)) % 60);
-                const s = Math.floor((diff / 1000) % 60);
-                function pad(n) {{ return String(n).padStart(2, "0"); }}
-                const el = document.getElementById("countdown-timer");
-                if (el) {{
-                    el.textContent = pad(d) + ":" + pad(h) + ":" + pad(m) + ":" + pad(s);
-                }}
+    countdown_html = f"""
+    <div id="countdown-timer" style="
+        font-family: {FONT_STACK};
+        font-size: 2.4rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #ffffff;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        margin: 0;
+        background: transparent;
+    ">00:00:00:00</div>
+    <script>
+    (function() {{
+        const target = new Date("{target_iso}").getTime();
+        function tick() {{
+            const now = new Date().getTime();
+            const diff = target - now;
+            if (diff <= 0) {{
+                window.parent.location.reload();
+                return;
             }}
-            tick();
-            setInterval(tick, 1000);
-        }})();
-        </script>
-    """, unsafe_allow_html=True)
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            function pad(n) {{ return String(n).padStart(2, "0"); }}
+            const el = document.getElementById("countdown-timer");
+            if (el) {{
+                el.textContent = pad(d) + ":" + pad(h) + ":" + pad(m) + ":" + pad(s);
+            }}
+        }}
+        tick();
+        setInterval(tick, 1000);
+    }})();
+    </script>
+    <style>
+    html, body {{ background: transparent !important; margin: 0 !important; padding: 0 !important; }}
+    </style>
+    """
+    components.html(countdown_html, height=70)
 
     st.markdown(f"<p style='margin-top: 18px;'>{t('lock_secret_intro')}</p>", unsafe_allow_html=True)
 
