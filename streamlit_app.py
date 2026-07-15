@@ -49,7 +49,7 @@ TEXT = {
         "change_language": "Change language",
         "lang_th": "ภาษาไทย",
         "lang_en": "English",
-        "lock_title": "Annoying system X_X",
+        "lock_title": "Annoying system UwU",
         "lock_subtitle": "Wait a little longer, otherwise it won't be exciting.",
         "lock_secret_intro": "There's a secret code, right? Let's try entering it.",
         "lock_code_placeholder": "Your code",
