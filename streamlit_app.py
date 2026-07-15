@@ -16,7 +16,7 @@ if "unlocked" not in st.session_state:
     st.session_state.unlocked = False
 
 TARGET_DT = datetime.datetime(2026, 7, 17, 14, 30, 0, tzinfo=ZoneInfo("Asia/Bangkok"))
-SECRET_CODE = "PrimxLCxt"
+SECRET_CODE = "PrxmxLxvxsCxt"
 
 NAMES_TH = {
     "Cat": "แคท",
@@ -49,7 +49,7 @@ TEXT = {
         "change_language": "Change language",
         "lang_th": "ภาษาไทย",
         "lang_en": "English",
-        "lock_title": "Annoying system UwU",
+        "lock_title": "Annoying system X_X",
         "lock_subtitle": "Wait a little longer, otherwise it won't be exciting.",
         "lock_secret_intro": "There's a secret code, right? Let's try entering it.",
         "lock_code_placeholder": "Your code",
@@ -75,7 +75,7 @@ TEXT = {
         "change_language": "เปลี่ยนภาษา",
         "lang_th": "ภาษาไทย",
         "lang_en": "English",
-        "lock_title": "ระบบกวนบาทา UwU",
+        "lock_title": "ระบบกวนxีน X_X",
         "lock_subtitle": "รอไปก่อน เดี๋ยวไม่ตื่นเต้น",
         "lock_secret_intro": "มีรหัสลับใช่มั้ย ลองใส่ดู",
         "lock_code_placeholder": "รหัสของคุณ",
