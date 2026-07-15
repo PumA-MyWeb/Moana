@@ -16,7 +16,6 @@ if "unlocked" not in st.session_state:
     st.session_state.unlocked = False
 
 TARGET_DT = datetime.datetime(2026, 7, 17, 14, 30, 0, tzinfo=ZoneInfo("Asia/Bangkok"))
-SECRET_CODE = "PrxmxLxvxsCxt_2818"
 
 NAMES_TH = {
     "Cat": "แคท",
@@ -500,6 +499,7 @@ if is_locked:
     )
 
     if entered_code:
+        SECRET_CODE = "PrxmxLxvxsCxt_2818"
         if entered_code.strip() == SECRET_CODE:
             st.session_state.unlocked = True
             st.rerun()
